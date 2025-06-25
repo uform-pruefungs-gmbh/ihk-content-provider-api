@@ -1,0 +1,215 @@
+openapi: "3.0.3"
+info:
+  title: IHK Graduation API
+  description: API for managing IHK graduation data to manage provider data and register content
+  version: "1.0"
+  license: 
+    name: "Apache-2.0"
+    url: https://www.apache.org/licenses/LICENSE-2.0
+      
+servers:
+  - url: https://api.pruefung.io/api/v1
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+    ServiceProvider:
+      type: object
+      required:
+        - provider_id
+        - name
+        - contact_email
+      description: Represents a service provider registered in the system
+      properties:
+        provider_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the service provider
+        name:
+          type: string
+        contact_email:
+          type: string
+          format: email
+          description: Email address for contacting the provider
+        contact_phone:
+          type: string
+        website:
+          type: string
+        description:
+          type: string
+        creation_date:
+          type: string
+          format: date-time
+        last_updated:
+          type: string
+          format: date-time
+        authorization_type:
+          type: string
+          description: Type of authorization required for the provider
+          enum: ["oauth2", "api_token"]
+        authorization_url:
+          type: string
+          format: uri
+          description: URL for the authorization endpoint
+        content_list_url:
+          type: string
+          format: uri
+          description: URL to fetch the content list for this provider
+        access_code_request_url:
+          type: string
+          format: uri
+          description: URL to request access codes for this providers content
+        execution_handling_url:
+          type: string
+          format: uri
+          description: URL for handing in execution of graduation tasks
+        monitoring_url:
+          description: URL for monitoring the provider's execution status changes
+          oneOf:
+            - type: object
+              required: [connection_type, url]
+              properties:
+                connection_type:
+                  type: string
+                  enum: [sse]
+                url:
+                  type: string
+                  format: uri
+                  description: URL for SSE (Server-Sent Events) monitoring endpoint
+            - type: object
+              required: [connection_type, url]
+              properties:
+                connection_type:
+                  type: string
+                  enum: [websocket]
+                url:
+                  type: string
+                  format: uri
+                  description: URL for WebSocket monitoring endpoint
+
+security:
+  - bearerAuth: []
+
+paths:
+  /providers:
+    get:
+      summary: Get service providers
+      description: Retrieve a list of registered service providers for a user
+      operationId: getServiceProviders
+      responses:
+        "200":
+          description: A list of service providers registered for the current user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ServiceProvider"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a new service provider
+      description: Register a new service provider in the system
+      operationId: addServiceProvider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceProvider"
+      responses:
+        "201":
+          description: Service provider successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProvider"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict - A provider with this ID already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /providers/{provider_id}:
+    put:
+      summary: Update a service provider data
+      description: Update an existing service provider's information
+      operationId: updateServiceProvider
+      parameters:
+        - name: provider_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the service provider to update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceProvider"
+      responses:
+        "200":
+          description: Service provider successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProvider"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Service provider not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
