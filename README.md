@@ -28,3 +28,9 @@ Die Grundfunktionen des SPI sind im Wesentlichen:
 - Abruf von Eingabeedaten nach Beendigung der Durchführung zur Weitergabe an die GfI
 
 Alle Aufrufe erfolgen durch den Prüfungsmanager an den/die Inhaltsanbieter. Ausnahme ist hier eine laufende Subscription. In diesem Fall werden die Daten über SSE oder Websockets an den Prüfungsmanager gesendet.
+
+## Technische Schnittstellendefinitionen
+
+[Technische Definition der API](api.html)
+[Technische Definition der SPI](spi.html)
+
