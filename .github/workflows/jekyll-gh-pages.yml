@@ -1,10 +1,15 @@
 # Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+name: Deploy openapi defs using Jekyll with GitHub Pages dependencies preinstalled
 
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ["release"]
+    paths:
+      - '**.json'
+      - '**.sh'
+      - '**.yml'
+      - '**.yaml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,12 +33,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install pre-requisites
+        run: |
+          sudo npm install -g @redocly/cli
+          sudo snap install yq
+        shell: bash
+      - name: Copy README to docs
+        shell: bash
+        run: |
+          sudo cp ${{ github.workspace }}/README.md ${{ github.workspace }}/docs/README.md
+      - name: Generate SPI- and API-Docs into docs dir
+        shell: bash
+        run: |
+          sudo npx @redocly/cli build-docs ${{ github.workspace }}/api-definitions/src/main/resources/ihk-content-provider-api.yaml ${{ github.workspace }}/docs/api.html
+          sudo npx @redocly/cli build-docs ${{ github.workspace }}/api-definitions/src/main/resources/ihk-content-provider-spi.yaml ${{ github.workspace }}/docs/spi.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
+          source: ./docs
           destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
