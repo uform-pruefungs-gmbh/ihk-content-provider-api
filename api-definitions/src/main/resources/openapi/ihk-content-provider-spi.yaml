@@ -1,12 +1,12 @@
 openapi: "3.0.3"
 info:
-  title: SPI IHK content provider for graduation
-  description: This is a graduation API for IHK content service provider.
+  title: SPI IHK content provider for examination
+  description: This is a examination API for IHK content service provider.
   version: "1.0"
-  license: 
+  license:
     name: "Apache-2.0"
     url: https://www.apache.org/licenses/LICENSE-2.0
-    
+
 servers:
   - url: https://api.pruefung.io/spi
 
@@ -52,7 +52,7 @@ components:
         content_id:
           type: string
           example: "123456789012345678"
-          description: Identifier for the graduation content
+          description: Identifier for the examination content
         subject_id:
           type: string
           example: "876543210987654321"
@@ -61,10 +61,16 @@ components:
           type: string
           format: duration
           example: "PT15M" # ISO 8601 duration format
-          description: Duration in seconds for which the OTP is valid
+          description: Duration time in ISO 8601 duration format this participation has during execution
+        additionaltime:
+          type: string
+          format: duration
+          example: "PT15M" # ISO 8601 duration format
+          default: "PT0S"
+          description: Optional additional time in ISO 8601 duration format this participation has during execution
         otpstatus:
-          $ref: "#/components/schemas/OtpStatus"
-          description: Current status of the graduation associated with this OTP
+          $ref: "#/components/schemas/OtpStatusType"
+          description: Current status of the examination associated with this OTP
         expiration:
           type: string
           format: date-time
@@ -83,12 +89,12 @@ components:
         participation_id:
           type: string
           example: "participation-1234567890"
-          description: Unique identifier for the user's participation in the graduation process
+          description: Unique identifier for the user's participation in the examination process
         name:
           type: string
           example: "Zwischenprüfung Herbst 2026 - Fachinformatiker Anwendungsentwicklung"
           description: Name of the participation
-          
+
     Participant:
       type: object
       required:
@@ -122,30 +128,34 @@ components:
           type: string
         status:
           type: string
-          enum:
-            [
-              created,
-              runnable,
-              running,
-              suspended,
-              finished,
-              aborted,
-              archived,
-              other,
-            ]
-          description:
-            "Current status of the graduation associated with this OTP. The status can be one of the following:
-            - created: The graduation has been created but not yet started.
-            - runnable: The graduation is ready to be started.
-            - running: The graduation is currently in progress.
-            - suspended: The graduation has been temporarily paused.
-            - finished: The graduation has been completed successfully.
-            - aborted: The graduation was aborted before completion.
-            - archived: The graduation has been archived and is no longer active.
-            - other: Any other status that does not fit the above categories."
+          $ref: "#/components/schemas/OtpStatusType"
         last_updated:
           type: string
           format: date-time
+
+    OtpStatusType:
+      type: string
+      enum:
+        [
+          created,
+          runnable,
+          running,
+          suspended,
+          finished,
+          aborted,
+          archived,
+          other,
+        ]
+      description:
+        "Current status of the examination associated with this OTP. The status can be one of the following:
+        - created: The examination has been created but not yet started.
+        - runnable: The examination is ready to be started.
+        - running: The examination is currently in progress.
+        - suspended: The examination has been temporarily paused.
+        - finished: The examination has been completed successfully.
+        - aborted: The examination was aborted before completion.
+        - archived: The examination has been archived and is no longer active.
+        - other: Any other status that does not fit the above categories."
 
     MonitorRegistration:
       type: object
@@ -166,42 +176,71 @@ components:
             type: string
             enum: [status_change, user_activity, system_alert]
 
+    OtpRequestItem:
+      type: object
+      required:
+        - content_id
+        - subject_id
+      properties:
+        content_id:
+          type: string
+          description: Identifier for the examination content
+          example: "123456789012345678"
+        subject_id:
+          type: string
+          description: Identifier for the subject or user to which the OTP is issued
+          example: "876543210987654321"
+        additionaltime:
+          type: string
+          format: duration
+          example: "PT15M" # ISO 8601 duration format
+          default: "PT0S"
+          description: Optional additional time in ISO 8601 duration format this participation has during execution
+        participation:
+          $ref: "#/components/schemas/Participation"
+        participant:
+          $ref: "#/components/schemas/Participant"
+    
+    AddTimeRequest:
+      type: object
+      required:
+        - otp_id
+        - additionaltime
+      properties:
+        otp_id:
+          type: string
+          description: Unique identifier for the one-time password
+          example: "4g7a07i54"
+        additionaltime:
+          type: string
+          format: duration
+          example: "PT15M" # ISO 8601 duration format
+          description: Additional time to add to the examination in ISO 8601 duration format
+        reason:
+          type: string
+          description: Reason for adding additional time
+          example: "Störung durch fehlerhaften Feueralarm während der Prüfung"
+
 security:
   - bearerAuth: []
 
 paths:
-  /graduations/otp:
+  /examinations/otp:
     post:
       summary: Create several one-time passwords
       operationId: createOtp
       description:
-        Generate one or more one-time passwords for accessing a specific graduation
-        A one-time password (otp) can be used to access a graduation content or to perform actions related to it.
+        Generate one or more one-time passwords for accessing a specific examination
+        A one-time password (otp) can be used to access a examination content or to perform actions related to it.
         Each OTP is associated with a specific content and subject (user).
-        The content is identified by a content_id and normally is unique for each graduation and profession.
+        The content is identified by a content_id and normally is unique for each examination and profession.
       requestBody:
         content:
           application/json:
             schema:
               type: array
               items:
-                type: object
-                required:
-                  - content_id
-                  - subject_id
-                properties:
-                  content_id:
-                    type: string
-                    description: Identifier for the graduation content
-                    example: "123456789012345678"
-                  subject_id:
-                    type: string
-                    description: Identifier for the subject or user to which the OTP is issued
-                    example: "876543210987654321"
-                  participation:
-                    $ref: "#/components/schemas/Participation"
-                  participant:
-                    $ref: "#/components/schemas/Participant"
+                $ref: "#/components/schemas/OtpRequestItem"
 
       responses:
         "201":
@@ -223,30 +262,37 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
         "404":
-          description: Graduation not found
+          description: examination not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /graduations/{content_id}/status:
-    get:
-      summary: Get current graduation status
-      description: Retrieve the current status of a graduation
+  /examinations/status:
+    post:
+      summary: Get current examination status
+      description: 
+        Retrieve the current status of one or more examinations identified by their OTP IDs.
+        post is used to retrieve the status of multiple examinations at once.
       operationId: getExaminationStatus
-      parameters:
-        - name: content_id
-          required: true
-          in: path
-          schema:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                description: List of otp_id for which to retrieve the status
+                example: ["123456789012345678", "234567890123456789"]
       responses:
         "200":
           description: Status retrieved successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OtpStatus"
+                type: array
+                items:
+                  $ref: "#/components/schemas/OtpStatus"
         "401":
           description: Unauthorized
           content:
@@ -254,35 +300,41 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
         "404":
-          description: Graduation not found
+          description: examination not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /examinations/lockstate/{lock_state}:
     put:
       summary: Update examination status
-      description: Change the status of a examination
-      operationId: updateExaminationStatus
+      description: 
+        "lock or unlock a list of examinations to probibit the usage by the participants.
+
+        if the OtpState of the examination isn't started yet, the OtpState will be set to **runnable**, 
+        if lock_state is 'unlock' or **created** if lock_state is 'lock'.
+        
+        if the OtpState of the examination is already started, the OtpState will be set to **suspended** 
+        if lock_state is 'lock' or **running** if lock_state is 'unlock'."
+      operationId: handleLocksExaminations
       parameters:
-        - name: content_id
-          required: true
+        - name: lock_state
           in: path
+          required: true
           schema:
             type: string
+            enum: [lock, unlock]
+          description: "State to set for the examinations. Use 'lock' to lock and 'unlock' to unlock."
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - status
-              properties:
-                status:
-                  type: string
-                  enum: [created, unlocked, running, paused, completed]
-                details:
-                  type: string
+              type: array
+              items:
+                type: string
+                description: List of otp_id for which should be locked or unlocked
+                example: ["123456789012345678", "234567890123456789"]
       responses:
         "200":
           description: Status updated successfully
@@ -303,11 +355,57 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
         "404":
-          description: Graduation not found
+          description: examination not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
+
+  /examinations/addtime:
+    put:
+      summary: Update examination status
+      description: 
+        "Adds time a list of examinations.
+        
+        This mu
+        "
+      operationId: addTime
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                $ref: "#/components/schemas/AddTimeRequest"
+      responses:
+        "200":
+          description: Time addition successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OtpStatus"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: examination not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
 
   /monitoring:
     post:
