@@ -6,7 +6,7 @@ on:
   push:
     branches: ["release"]
     paths:
-      - '**.json'
+      - '**.md'
       - '**.sh'
       - '**.yml'
       - '**.yaml'
@@ -45,8 +45,8 @@ jobs:
       - name: Generate SPI- and API-Docs into docs dir
         shell: bash
         run: |
-          sudo npx @redocly/cli build-docs ${{ github.workspace }}/api-definitions/src/main/resources/ihk-content-provider-api.yaml ${{ github.workspace }}/docs/api.html
-          sudo npx @redocly/cli build-docs ${{ github.workspace }}/api-definitions/src/main/resources/ihk-content-provider-spi.yaml ${{ github.workspace }}/docs/spi.html
+          sudo npx @redocly/cli build-docs ${{ github.workspace }}/api-definitions/src/main/resources/openapi/ihk-content-provider-api.yaml -o ${{ github.workspace }}/docs/api.html
+          sudo npx @redocly/cli build-docs ${{ github.workspace }}/api-definitions/src/main/resources/openapi/ihk-content-provider-spi.yaml -o ${{ github.workspace }}/docs/spi.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build with Jekyll
