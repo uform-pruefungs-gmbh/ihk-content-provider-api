@@ -48,7 +48,7 @@ components:
         otp_type:
           type: string
           enum: [tan, link]
-          description: Type of the one-time password. TODO - discuss, if link is needed. Makes problemss
+          description: Type of the one-time password. TODO - discuss, if link is needed. May cause issues
         content_id:
           type: string
           example: "123456789012345678"
