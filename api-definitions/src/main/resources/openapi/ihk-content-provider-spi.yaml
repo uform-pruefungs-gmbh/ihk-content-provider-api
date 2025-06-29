@@ -531,7 +531,7 @@ paths:
     post:
       tags:
         - ServerSentEvents
-      summary: Subcribe for monitoring
+      summary: Subscribe for monitoring
       description:
         Subscribe for monitoring events. These events are sent as Server-Sent Events (SSE) stream.
         The client will receive a continuous stream of events related to the examination status.
