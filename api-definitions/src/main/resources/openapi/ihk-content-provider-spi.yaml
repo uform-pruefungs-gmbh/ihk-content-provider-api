@@ -181,7 +181,7 @@ components:
           $ref: "#/components/schemas/Participation"
         participant:
           $ref: "#/components/schemas/Participant"
-    
+
     AddTimeRequest:
       type: object
       required:
@@ -227,7 +227,7 @@ components:
           type: string
           format: date-time
           description: Timestamp of the heartbeat
- 
+
     MonitoringEvent:
       type: object
       required: [event, content_id, otp_id]
@@ -295,6 +295,36 @@ components:
           description: Indicates whether the participant has left the browser or not
           example: false
 
+    ExecutionEntry:
+      type: object
+      required:
+        - entry_id
+        - otp_id
+        - timestamp
+        - type
+      properties:
+        entry_id:
+          type: string
+          description: Unique identifier for the entry
+          example: "entry-001"
+        otp_id:
+          type: string
+          description: OTP ID associated with the entry
+          example: "4g7a07i54"
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp when the entry was made
+          example: "2026-10-01T10:15:00Z"
+        type:
+          type: string
+          description: Type of entry (e.g., answer, action, log)
+          example: "answer"
+        data:
+          type: object
+          description: Entry-specific data (e.g., answer details, action performed)
+          additionalProperties: true
+
     ErrorEvent:
       description: A server-sent error event
       type: object
@@ -314,6 +344,8 @@ security:
 paths:
   /examinations/otp:
     post:
+      tags:
+        - OneTimePassword
       summary: Create several one-time passwords
       operationId: createOtp
       description:
@@ -357,8 +389,10 @@ paths:
 
   /examinations/status:
     post:
+      tags:
+        - HandleState
       summary: Get current examination status
-      description: 
+      description:
         Retrieve the current status of one or more examinations identified by their OTP IDs.
         post is used to retrieve the status of multiple examinations at once.
       operationId: getExaminationStatus
@@ -396,13 +430,13 @@ paths:
   /examinations/lockstate/{lock_state}:
     put:
       summary: Handle locks and suspensions of examinations
-      description: 
+      description:
         "lock or unlock a list of examinations to prohibit the usage by the participants.
 
-        if the OtpState of the examination isn't started yet, the OtpState will be set to **runnable**, 
+        if the OtpState of the examination isn't started yet, the OtpState will be set to **runnable**,
         if lock_state is 'unlock' or **created** if lock_state is 'lock'.
-        
-        if the OtpState of the examination is already started, the OtpState will be set to **suspended** 
+
+        if the OtpState of the examination is already started, the OtpState will be set to **suspended**
         if lock_state is 'lock' or **running** if lock_state is 'unlock'."
       operationId: handleLocksExaminations
       parameters:
@@ -448,13 +482,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-
   /examinations/addtime:
     put:
-      summary: Add additional time to examinations 
-      description: 
-        "Adds time a list of examinations.
-        
+      tags:
+        - HandleState
+      summary: Add additional time to examinations
+      description: "Adds time a list of examinations.
+
         This endpoint allows to add additional time to the examinations identified by their OTP IDs.
         "
       operationId: addTime
@@ -492,14 +526,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-
-
+    # Monitoring during execution
   /monitoring/sse:
     post:
-      tags: 
-        -  ServerSentEvents
+      tags:
+        - ServerSentEvents
       summary: Subcribe for monitoring
-      description: Subscribe for monitoring events. These events are sent as Server-Sent Events (SSE) stream.
+      description:
+        Subscribe for monitoring events. These events are sent as Server-Sent Events (SSE) stream.
         The client will receive a continuous stream of events related to the examination status.
         The client must provide a valid subscription_id to receive the events.
       operationId: subscribeForMonitoring
@@ -536,3 +570,49 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /examinations/entries:
+    post:
+      tags:
+        - ExecutionEntries
+      summary: Get all entries made during completed executions
+      description: Retrieve all entries (e.g., answers, actions, logs) made by participants during examination executions that are completed. Accepts a list of otp_id.
+      operationId: getExecutionEntries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+              description: List of OTP IDs identifying the completed examination executions.
+              example: ["4g7a07i54", "7h8b09j65"]
+      responses:
+        "200":
+          description: Entries retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/ExecutionEntry"
+                description: Map of otp_id to list of entries
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Examination or entries not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
