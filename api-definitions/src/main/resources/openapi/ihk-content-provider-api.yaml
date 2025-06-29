@@ -3,10 +3,10 @@ info:
   title: IHK Graduation API
   description: API for managing IHK graduation data to manage provider data and register content
   version: "1.0"
-  license: 
+  license:
     name: "Apache-2.0"
     url: https://www.apache.org/licenses/LICENSE-2.0
-      
+
 servers:
   - url: https://api.pruefung.io/api/v1
 
@@ -214,3 +214,60 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
+  /providers/{provider_id}/content-spec:
+    post:
+      summary: Define content specification for a provider
+      description: Create or update the content specification for a given service provider
+      operationId: defineContentSpec
+      parameters:
+        - name: provider_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the service provider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - spec
+              properties:
+                spec:
+                  type: object
+                  description: TODO The content specification details for the provider
+      responses:
+        "200":
+          description: Content specification successfully defined or updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Content specification updated
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Service provider not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+                
