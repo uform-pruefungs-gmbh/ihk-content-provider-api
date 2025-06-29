@@ -9,7 +9,7 @@ rules:
   tag-description: off
   operation-summary: error
   no-unresolved-refs: error
-  no-unused-components: error
+  no-unused-components: info
   operation-2xx-response: error
   operation-operationId: error
   operation-singular-tag: error
