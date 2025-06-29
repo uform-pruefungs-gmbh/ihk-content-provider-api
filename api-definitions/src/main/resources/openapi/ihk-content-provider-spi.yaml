@@ -157,25 +157,6 @@ components:
         - archived: The examination has been archived and is no longer active.
         - other: Any other status that does not fit the above categories."
 
-    MonitorRegistration:
-      type: object
-      required:
-        - monitor_id
-        - content_id
-      properties:
-        monitor_id:
-          type: string
-        content_id:
-          type: string
-        callback_url:
-          type: string
-          format: uri
-        events:
-          type: array
-          items:
-            type: string
-            enum: [status_change, user_activity, system_alert]
-
     OtpRequestItem:
       type: object
       required:
@@ -221,6 +202,98 @@ components:
           description: Reason for adding additional time
           example: "Störung durch fehlerhaften Feueralarm während der Prüfung"
 
+    # Streaming date definitions
+    MonitoringStream:
+      oneOf:
+        - $ref: "#/components/schemas/HeartbeatEvent"
+        - $ref: "#/components/schemas/MonitoringEvent"
+      discriminator:
+        propertyName: event
+        mapping:
+          ping: "#/components/schemas/HeartbeatEvent"
+          stock_update: "#/components/schemas/MonitoringEvent"
+
+    HeartbeatEvent:
+      description: A server-sent event indicating that the server is still processing the request
+      type: object
+      required: [event]
+      properties:
+        event:
+          type: string
+          enum: ["ping"]
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the heartbeat
+ 
+    MonitoringEvent:
+      type: object
+      required: [event, content_id, otp_id]
+      properties:
+        event:
+          type: string
+          description: Type of the event
+          example: "status_change"
+        monitoring_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the monitoring event
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        subscription_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the subscription
+          example: "123e4567-e89b-12d3-a456-426614174001"
+        provider_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the content provider
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        otp_id:
+          type: string
+          description: Unique identifier for the one-time password
+          example: "4g7a07i54"
+        otp_state:
+          type: string
+          $ref: "#/components/schemas/OtpStatusType"
+          description: Current status of the examination associated with this OTP
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the event
+        total_questions:
+          type: integer
+          description: Total number of questions in the examination
+          example: 50
+        done_questions:
+          type: integer
+          description: Number of questions completed by the participant
+          example: 25
+        remaintime:
+          type: string
+          format: duration
+          description: Remaining time for the examination in ISO 8601 duration format
+          example: "PT30M" # 30 minutes remaining
+        endtime:
+          type: string
+          format: date-time
+          description: expected endtime of the examination
+          example: "2026-10-01T12:00:00Z"
+        locked:
+          type: boolean
+          description: Indicates whether the examination is locked or not
+          example: false
+        additionaltime:
+          type: string
+          format: duration
+          description: Additional time added to the examination in ISO 8601 duration format
+          example: "PT15M" # 15 minutes additional time
+        browser_left:
+          type: boolean
+          description: Indicates whether the participant has left the browser or not
+          example: false
+
+# Start of description
 security:
   - bearerAuth: []
 
@@ -407,10 +480,14 @@ paths:
 
 
 
-  /monitoring:
+  /monitoring/sse:
     post:
+      tags: 
+        -  ServerSentEvents
       summary: Subcribe for monitoring
-      description: Subcribe for monitoring events
+      description: Subcribe for monitoring events. These events are sent as Server-Sent Events (SSE) stream.
+        The client will receive a continuous stream of events related to the examination status.
+        The client must provide a valid subscription_id to receive the events.
       operationId: subscribeForMonitoring
       requestBody:
         content:
@@ -420,23 +497,18 @@ paths:
               required:
                 - content_id
               properties:
-                content_id:
+                subscription_id:
                   type: string
-                callback_url:
-                  type: string
-                  format: uri
-                events:
-                  type: array
-                  items:
-                    type: string
-                    enum: [status_change, user_activity, system_alert]
+                  format: uuid
+                  description: Unique identifier for the subscription
+                  example: "123e4567-e89b-12d3-a456-426614174002"
       responses:
-        "201":
+        "200":
           description: Monitoring successfully registered
           content:
-            application/json:
+            text/event-stream:
               schema:
-                $ref: "#/components/schemas/MonitorRegistration"
+                $ref: "#/components/schemas/MonitoringStream"
         "400":
           description: Bad request
           content:
@@ -450,29 +522,3 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /monitoring/{monitor_id}:
-    delete:
-      summary: Unsubscribe from monitoring
-      description: Unsubscribe a monitoring listener
-      operationId: unsubscribeMonitoring
-      parameters:
-        - name: monitor_id
-          required: true
-          in: path
-          schema:
-            type: string
-      responses:
-        "204":
-          description: Monitoring successfully unsubcribed
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "404":
-          description: Monitor registration not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
