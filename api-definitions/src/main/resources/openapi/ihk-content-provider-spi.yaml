@@ -207,11 +207,13 @@ components:
       oneOf:
         - $ref: "#/components/schemas/HeartbeatEvent"
         - $ref: "#/components/schemas/MonitoringEvent"
+        - $ref: "#/components/schemas/ErrorEvent"
       discriminator:
         propertyName: event
         mapping:
           ping: "#/components/schemas/HeartbeatEvent"
-          stock_update: "#/components/schemas/MonitoringEvent"
+          error: "#/components/schemas/ErrorEvent"
+          status_change: "#/components/schemas/MonitoringEvent"
 
     HeartbeatEvent:
       description: A server-sent event indicating that the server is still processing the request
@@ -292,6 +294,18 @@ components:
           type: boolean
           description: Indicates whether the participant has left the browser or not
           example: false
+
+    ErrorEvent:
+      description: A server-sent error event
+      type: object
+      required: [event, message]
+      properties:
+        event:
+          type: string
+          enum: [error]
+        message:
+          type: string
+          description: Description of the error
 
 # Start of description
 security:
