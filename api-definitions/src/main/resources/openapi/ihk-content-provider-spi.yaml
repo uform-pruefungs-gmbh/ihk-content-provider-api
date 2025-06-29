@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 info:
   title: SPI IHK content provider for examination
-  description: This is a examination API for IHK content service provider.
+  description: This is an examination API for IHK content service provider.
   version: "1.0"
   license:
     name: "Apache-2.0"
@@ -48,7 +48,7 @@ components:
         otp_type:
           type: string
           enum: [tan, link]
-          description: Type of the one-time password. TODO - discuss, if link is needed. Makes problemss
+          description: Type of the one-time password. TODO - discuss, if link is needed. Makes problems
         content_id:
           type: string
           example: "123456789012345678"
@@ -395,9 +395,9 @@ paths:
 
   /examinations/lockstate/{lock_state}:
     put:
-      summary: Handle locks and subspensions of examinations
+      summary: Handle locks and suspensions of examinations
       description: 
-        "lock or unlock a list of examinations to probibit the usage by the participants.
+        "lock or unlock a list of examinations to prohibit the usage by the participants.
 
         if the OtpState of the examination isn't started yet, the OtpState will be set to **runnable**, 
         if lock_state is 'unlock' or **created** if lock_state is 'lock'.
@@ -499,7 +499,7 @@ paths:
       tags: 
         -  ServerSentEvents
       summary: Subcribe for monitoring
-      description: Subcribe for monitoring events. These events are sent as Server-Sent Events (SSE) stream.
+      description: Subscribe for monitoring events. These events are sent as Server-Sent Events (SSE) stream.
         The client will receive a continuous stream of events related to the examination status.
         The client must provide a valid subscription_id to receive the events.
       operationId: subscribeForMonitoring
