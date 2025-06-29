@@ -395,7 +395,7 @@ paths:
 
   /examinations/lockstate/{lock_state}:
     put:
-      summary: Update examination status
+      summary: Handle locks and subspensions of examinations
       description: 
         "lock or unlock a list of examinations to probibit the usage by the participants.
 
@@ -451,11 +451,11 @@ paths:
 
   /examinations/addtime:
     put:
-      summary: Update examination status
+      summary: Add additional time to examinations 
       description: 
         "Adds time a list of examinations.
         
-        This mu
+        This endpoint allows to add additional time to the examinations identified by their OTP IDs.
         "
       operationId: addTime
       requestBody:
