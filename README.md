@@ -31,6 +31,9 @@ Alle Aufrufe erfolgen durch den Prüfungsmanager an den/die Inhaltsanbieter. Aus
 
 ## Technische Schnittstellendefinitionen
 
+Die technischen Definitionen beschreiben die Schnittstellen im OpenAPI-Format V3
+
 [Technische Definition der API](api.html)
+
 [Technische Definition der SPI](spi.html)
 
