@@ -1,0 +1,102 @@
+openapi: 3.1.0
+info:
+  title: CMI5 Container API
+  description: API for managing CMI5 learning content containers
+  version: 1.0.0
+  license:
+    name: "Apache-2.0"
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+components:
+  schemas:
+    CMI5:
+      type: object
+      xml:
+        name: cmi5
+        namespace: "https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
+        wrapped: false
+      example:
+        $ref: "#/definitions/CMI5XML"
+      properties:
+        course:
+          type: object
+          description: |
+            The course structure defines the organization of the course, including its components and their relationships.
+          properties:
+            components:
+              type: array
+              items:
+                $ref: "#/components/schemas/Course"
+        au:
+          type: object
+          description: |
+            The Activity Unit (AU) is a specific part of the course that can be tracked and assessed.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Unique identifier for the Activity Unit
+            title:
+              type: string
+              description: Title of the Activity Unit
+            description:
+              type: string
+              description: Detailed description of the Activity Unit
+        blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Block"
+
+    Course:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the course
+          xml:
+            attribute: true
+        title:
+          type: string
+          description: Title of the course
+        description:
+          type: object
+          properties:
+            langstring:
+              $ref: "#/components/schemas/LangString"
+          description: Detailed description of the component
+
+    LangString:
+      type: object
+      properties:
+        lang:
+          type: string
+          description: Language code for the description
+          xml:
+            attribute: true
+        "":
+          type: string
+
+    Block:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the block
+        title:
+          type: string
+          description: Title of the block
+        content:
+          type: string
+          description: Content of the block, which can include text, media, etc.
+
+definitions:
+  CMI5XML: |
+    <?xml version="1.0" encoding="UTF-8"?>
+      <data>
+        <bucket>
+          <item>2019-05-01T00:00:00.000Z</item>
+          <item>2019-06-01T00:00:00.000Z</item>
+        </bucket>
+     </data>
+    </xml>
