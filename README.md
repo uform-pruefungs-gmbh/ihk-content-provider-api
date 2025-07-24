@@ -62,10 +62,12 @@ Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignab
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <courseStructure xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
-                xmlns:ihk="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
-                xmlns:ihkrecords="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd cmi5.xsd">
+    xmlns:ihk="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
+    xmlns:ihkcontent="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecord.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd ../api-definitions/src/main/resources/xsd/cmi5.xsd
+    https://apidocs.pruefung.io/xsd/ihk-level1.xsd ../api-definitions/src/main/resources/xsd/ihk-level1.xsd
+    https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd ../api-definitions/src/main/resources/xsd/ihk-level2-executionrecords.xsd" xsi:targetNamespace="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd">
+
     <course id="https://example.pruefung.io/courses/medienkaufleute-2025">
         <title>
             <langstring lang="de">ZP F25 Medienkaufleute Digital und Print</langstring>
@@ -74,8 +76,7 @@ Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignab
             <langstring lang="de">IHK-Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print</langstring>
         </description>
     </course>
-    <au id="https://example.pruefung.io/au/medienkaufleute-2025" moveOn="CompletedAndPassed" masteryScore="0.7"
-        launchMethod="OwnWindow" activityType="assessment">
+    <au id="https://example.pruefung.io/au/medienkaufleute-2025" moveOn="CompletedAndPassed" masteryScore="0.7" launchMethod="OwnWindow" activityType="assessment">
         <title>
             <langstring lang="de">ZP F25 Medienkaufleute Digital und Print</langstring>
         </title>
@@ -90,22 +91,29 @@ Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignab
                     <ihk:id>1</ihk:id>
                     <ihk:title>Was ist der Hauptzweck des Marketings?</ihk:title>
                     <ihk:interactiontypes>fill-in</ihk:interactiontypes>
-
-                    <!-- Level 2: Austausch von Erfassungen vom Prüfungsmanager zur GfI -->
-                    <ihkrecords:answerlist>
-                        <ihkrecords:questionid>1</ihkrecords:questionid>
-                        <ihkrecords:participantid>12345</ihkrecords:participantid>
-                        <ihkrecords:participationid>67890</ihkrecords:participationid>
-                        <ihkrecords:gfinummer>1234567890</ihkrecords:gfinummer>
-                        <ihkrecords:answer>
-                            <ihkrecords:id>2</ihkrecords:id>
-                            <ihkrecords:title>Kundenbindung stärken</ihkrecords:title>
-                            <ihkrecords:interactiontype>fill-in</ihkrecords:interactiontype>
-                            <ihkrecords:answertext>Test</ihkrecords:answertext>
-                        </ihkrecords:answer>
-                    </ihkrecords:answerlist>
                 </ihk:question>
             </ihk:questionList>
+
+            <!-- Level 2: Resultentries by user for transmission to GfI -->
+            <ihkcontent:questions>
+                <ihkcontent:question>
+                    <ihkcontent:id>1</ihkcontent:id>
+                    <ihkcontent:title>Was ist der Hauptzweck des Marketings?</ihkcontent:title>
+                    <ihkcontent:answerlist>
+                        <ihkcontent:questionid>1</ihkcontent:questionid>
+                        <ihkcontent:participantid>12345</ihkcontent:participantid>
+                        <ihkcontent:participationid>67890</ihkcontent:participationid>
+                        <ihkcontent:gfinummer>1234567890</ihkcontent:gfinummer>
+                        <ihkcontent:answer>
+                            <ihkcontent:id>2</ihkcontent:id>
+                            <ihkcontent:title>Kundenbindung stärken</ihkcontent:title>
+                            <ihkcontent:interactiontype>fill-in</ihkcontent:interactiontype>
+                            <ihkcontent:answertext>Test</ihkcontent:answertext>
+                        </ihkcontent:answer>
+                    </ihkcontent:answerlist>
+                </ihkcontent:question>
+            </ihkcontent:questions>
+
         </objectives>
         <url>https://example.pruefung.io/launch/medienkaufleute-2025</url>
     </au>
