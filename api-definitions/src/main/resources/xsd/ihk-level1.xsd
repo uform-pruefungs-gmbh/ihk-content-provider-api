@@ -1,0 +1,62 @@
+<xs:schema xmlns="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level1.xsd" elementFormDefault="qualified" id="ihkLevel1">
+
+    <xs:element name="questionList" type="questionListType"/>
+
+    <xs:complexType name="questionListType">
+        <xs:annotation>
+            <xs:documentation>
+                This type represents a list of questions in the IHK Level 1 exam format.
+                It contains multiple question elements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="question" type="questionType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="berufenummer" type="xs:string" />
+        <xs:attribute name="pruefungszeitpunkt">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[FSHW][0-9][0-9]"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="questionType">
+        <xs:annotation>
+            <xs:documentation>
+                This type represents a question in the IHK Level 1 exam format.
+                Each question has an ID, a title, and can have multiple interaction types
+                to describe the nature of the question.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="interactiontypes" type="interactionType" maxOccurs="unbounded"/>
+            <xs:sequence>
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Based on cmi.interaction.type of SCORM 2004 4th edition 
+     and http://adlnet.gov/expapi/activities/cmi.interaction from xapi profile "SCORM profile" based on
+          https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md
+    -->
+    <xs:simpleType name="interactionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="true-false"/>
+            <xs:enumeration value="choice"/>
+            <xs:enumeration value="fill-in"/>
+            <xs:enumeration value="matching"/>
+            <xs:enumeration value="performance"/>
+            <xs:enumeration value="sequencing"/>
+            <xs:enumeration value="likert"/>
+            <xs:enumeration value="numeric"/>
+            <xs:enumeration value="other"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

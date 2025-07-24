@@ -429,6 +429,8 @@ paths:
 
   /examinations/lockstate/{lock_state}:
     put:
+      tags:
+        - HandleState
       summary: Handle locks and suspensions of examinations
       description:
         "lock or unlock a list of examinations to prohibit the usage by the participants.

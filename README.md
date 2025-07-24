@@ -29,6 +29,24 @@ Die Grundfunktionen des SPI sind im Wesentlichen:
 
 Alle Aufrufe erfolgen durch den Prüfungsmanager an den/die Inhaltsanbieter. Ausnahme ist hier eine laufende Subscription. In diesem Fall werden die Daten über SSE oder Websockets an den Prüfungsmanager gesendet.
 
+## Inhaltsanbieter (content provider)
+
+Inhaltsanbieter sind für die Bereitstellung der Prüfungsinhalte verantwortlich. Sie implementieren die SPI, um mit dem Prüfungsmanager zu kommunizieren und die erforderlichen Funktionen bereitzustellen.
+
+## Konzept des Datenaustauschmodells
+
+Das Datenaustauschmodell beschreibt die Struktur der Daten, die zwischen dem Prüfungsmanager und den Inhaltsanbietern sowie integrierten Systemen ausgetauscht werden.
+
+Das Datenmodel ist in mehrere Level unterteilt, die jeweils unterschiedliche Aspekte der Prüfungsinhalte und -strukturen abbilden. Die Level sind:
+
+- **Level 0:** Basisinformationen zu Prüfungen inkl. Metadaten. Basierend auf dem Standard xAPI 2.0 und CMI5.
+- **Level 1:** Grundlegende Struktur der Prüfungsfragen. Insbesondere eine Liste der Prüfungsfragen.
+- **Level 2:** Detaillierte Informationen zu Prüfungsfragen und -antworten. Diese Inhalte sind von Anwendungsfall und den Kommunikationspartnern abhängig.
+
+![Überblick über das Datenaustauschmodell](./docs/images/bild-datenaustausch-ueberblick.png)
+
+Die Definitionen sind in XSD (XML Schema Definition) und OpenAPI 3.0.x-Format verfügbar.
+
 ## Technische Schnittstellendefinitionen
 
 Die technischen Definitionen beschreiben die Schnittstellen im OpenAPI-Format V3
@@ -37,3 +55,77 @@ Die technischen Definitionen beschreiben die Schnittstellen im OpenAPI-Format V3
 
 [Technische Definition der SPI](spi.html)
 
+## CMI5 Beispielstruktur für Medienkaufleute Digital und Print
+
+Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignable Unit (AU) für "Medienkaufleute Digital und Print":
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<courseStructure xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
+    xmlns:ihk="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
+    xmlns:ihkcontent="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecord.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd ../api-definitions/src/main/resources/xsd/cmi5.xsd
+    https://apidocs.pruefung.io/xsd/ihk-level1.xsd ../api-definitions/src/main/resources/xsd/ihk-level1.xsd
+    https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd ../api-definitions/src/main/resources/xsd/ihk-level2-executionrecords.xsd" xsi:targetNamespace="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd">
+
+    <course id="https://example.pruefung.io/courses/medienkaufleute-2025">
+        <title>
+            <langstring lang="de">ZP F25 Medienkaufleute Digital und Print</langstring>
+        </title>
+        <description>
+            <langstring lang="de">IHK-Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print</langstring>
+        </description>
+    </course>
+    <au id="https://example.pruefung.io/au/medienkaufleute-2025" moveOn="CompletedAndPassed" masteryScore="0.7" launchMethod="OwnWindow" activityType="assessment">
+        <title>
+            <langstring lang="de">ZP F25 Medienkaufleute Digital und Print</langstring>
+        </title>
+        <description>
+            <langstring lang="de">IHK Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print</langstring>
+        </description>
+        <objectives>
+            <objective idref="https://example.pruefung.io/objectives/medienkaufleute-2025/1"></objective>
+            <!-- Level 1: Definition der Prüfungsfragen -->
+            <ihk:questionList berufenummer="5598" pruefungszeitpunkt="F25">
+                <ihk:question>
+                    <ihk:id>1</ihk:id>
+                    <ihk:title>Was ist der Hauptzweck des Marketings?</ihk:title>
+                    <ihk:interactiontypes>fill-in</ihk:interactiontypes>
+                </ihk:question>
+            </ihk:questionList>
+
+            <!-- Level 2: Resultentries by user for transmission to GfI -->
+            <ihkcontent:questions>
+                <ihkcontent:question>
+                    <ihkcontent:id>1</ihkcontent:id>
+                    <ihkcontent:title>Was ist der Hauptzweck des Marketings?</ihkcontent:title>
+                    <ihkcontent:answerlist>
+                        <ihkcontent:questionid>1</ihkcontent:questionid>
+                        <ihkcontent:participantid>12345</ihkcontent:participantid>
+                        <ihkcontent:participationid>67890</ihkcontent:participationid>
+                        <ihkcontent:gfinummer>1234567890</ihkcontent:gfinummer>
+                        <ihkcontent:answer>
+                            <ihkcontent:id>2</ihkcontent:id>
+                            <ihkcontent:title>Kundenbindung stärken</ihkcontent:title>
+                            <ihkcontent:interactiontype>fill-in</ihkcontent:interactiontype>
+                            <ihkcontent:answertext>Test</ihkcontent:answertext>
+                        </ihkcontent:answer>
+                    </ihkcontent:answerlist>
+                </ihkcontent:question>
+            </ihkcontent:questions>
+
+        </objectives>
+        <url>https://example.pruefung.io/launch/medienkaufleute-2025</url>
+    </au>
+
+</courseStructure>
+```
+
+Diese XML-Struktur enthält:
+
+- Eine Course-Definition mit Titel und Beschreibung
+- Eine AU (Assignable Unit) für "Medienkaufleute Digital und Print" mit:
+  - Berufekennnummer "82122" als zusätzliches Attribut
+  - Prüfungszeitpunkt "2025-06-05T09:00:00+02:00" als zusätzliches Attribut
+  - Verschiedene CMI5-konforme Attribute wie moveOn, masteryScore und launchMethod
+  - Titel, Beschreibung und Launch-URL

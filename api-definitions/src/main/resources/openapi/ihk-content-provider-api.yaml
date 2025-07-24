@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 info:
-  title: IHK Graduation API
-  description: API for managing IHK graduation data to manage provider data and register content
+  title: IHK Examination API
+  description: API for managing IHK examination data to manage provider data and register content
   version: "1.0"
   license:
     name: "Apache-2.0"
@@ -69,41 +69,10 @@ components:
           type: string
           format: uri
           description: URL for the authorization endpoint
-        content_list_url:
+        spi_base_url:
           type: string
           format: uri
-          description: URL to fetch the content list for this provider
-        access_code_request_url:
-          type: string
-          format: uri
-          description: URL to request access codes for this providers content
-        execution_handling_url:
-          type: string
-          format: uri
-          description: URL for handing in execution of graduation tasks
-        monitoring_url:
-          description: URL for monitoring the provider's execution status changes
-          oneOf:
-            - type: object
-              required: [connection_type, url]
-              properties:
-                connection_type:
-                  type: string
-                  enum: [sse]
-                url:
-                  type: string
-                  format: uri
-                  description: URL for SSE (Server-Sent Events) monitoring endpoint
-            - type: object
-              required: [connection_type, url]
-              properties:
-                connection_type:
-                  type: string
-                  enum: [websocket]
-                url:
-                  type: string
-                  format: uri
-                  description: URL for WebSocket monitoring endpoint
+          description: URL to the base endpoint of the service provider interface (SPI)
 
 security:
   - bearerAuth: []
@@ -111,6 +80,8 @@ security:
 paths:
   /providers:
     get:
+      tags:
+        - Service Providers
       summary: Get service providers
       description: Retrieve a list of registered service providers for a user
       operationId: getServiceProviders
@@ -136,6 +107,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
     post:
+      tags:
+        - Service Providers
       summary: Create a new service provider
       description: Register a new service provider in the system
       operationId: addServiceProvider
@@ -173,6 +146,8 @@ paths:
 
   /providers/{provider_id}:
     put:
+      tags:
+        - Service Providers
       summary: Update a service provider data
       description: Update an existing service provider's information
       operationId: updateServiceProvider
@@ -217,6 +192,8 @@ paths:
 
   /providers/{provider_id}/content-spec:
     post:
+      tags:
+        - Content Specification
       summary: Define content specification for a provider
       description: Create or update the content specification for a given service provider
       operationId: defineContentSpec
@@ -269,5 +246,3 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
-                
