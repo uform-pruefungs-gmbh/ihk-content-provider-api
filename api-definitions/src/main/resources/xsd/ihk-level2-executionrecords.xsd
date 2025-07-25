@@ -1,31 +1,68 @@
-<xs:schema xmlns="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecord.xsd"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecord.xsd" elementFormDefault="qualified" id="ihkLevel1">
+<xs:schema xmlns="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:ihkcommon="https://apidocs.pruefung.io/xsd/ihk-common.xsd" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd" elementFormDefault="qualified" id="ihkLevel2">
 
-    <xs:element name="questions" type="questionListType"/>
+    <xs:import namespace="https://apidocs.pruefung.io/xsd/ihk-common.xsd" schemaLocation="ihk-common.xsd"/>
+
+    <xs:element name="executiondata" type="executionrecordType"/>
+
+    <xs:complexType name="executionrecordType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>Dieser Typ repräsentiert die Datenstruktur für die Ausführung von Prüfungen im IHK Level 2 Prüfungsformat.</xs:documentation>
+            </xs:annotation>
+            <xs:element name="metadata" type="metadataType"/>
+            <xs:element name="fragen" type="questionListType"/>
+            <xs:element name="tags" type="ihkcommon:tagsType" minOccurs="0"/>
+
+            <xs:sequence>
+                <xs:annotation>
+                    <xs:documentation>Hier können weitere Inhalte bereitgestellt werden. Dies wird als IHK Level 2-Content bezeichnet und ist in der Regel anwendungsspezifisch.</xs:documentation>
+                </xs:annotation>
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="metadataType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>
+                Dieser Typ repräsentiert Metadaten für das IHK Level 2 Prüfungsformat.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name="kammernummer" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Kammernummer der IHK, die die Prüfung durchführt.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="questionListType">
-        <xs:annotation>
-            <xs:documentation>
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>
                 This type represents a list of questions in the IHK Level 1 exam format.
                 It contains multiple question elements.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
+                </xs:documentation>
+            </xs:annotation>
             <xs:element name="question" type="questionType" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="questionType">
-        <xs:annotation>
-            <xs:documentation>
-                This type represents a question in the IHK Level 2 exam format.
-            </xs:documentation>
-        </xs:annotation>
         <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>
+                This type represents a question in the IHK Level 2 exam format.
+                </xs:documentation>
+            </xs:annotation>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="title" type="xs:string"/>
             <xs:sequence>
-                <xs:element name="question" type="answerListType" maxOccurs="unbounded"/>
+                <xs:element name="answerlist" type="answerListType" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:sequence>
                 <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
@@ -34,18 +71,17 @@
     </xs:complexType>
 
     <xs:complexType name="answerListType">
-        <xs:annotation>
-            <xs:documentation>
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>
                 This type represents a list of answers in the IHK Level 2 exam format.
                 It contains multiple answer elements.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="questionid" type="xs:string"></xs:element>
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name="questionid" type="xs:string" minOccurs="1"></xs:element>
             <xs:element name="participantid" type="xs:string"></xs:element>
-            <xs:element name="participationid" type="xs:string"></xs:element>
-            <xs:element name="gfinummer" type="xs:string"></xs:element>
-            <xs:element name="interactiontypes" type="interactionType" maxOccurs="unbounded"/>
+            <xs:element name="participationid" type="xs:string" minOccurs="0"></xs:element>
+            <xs:element name="gfinummer" type="xs:string" minOccurs="0"></xs:element>
             <xs:sequence>
                 <xs:element name="answer" type="answerType" maxOccurs="unbounded"/>
             </xs:sequence>
@@ -54,37 +90,19 @@
     </xs:complexType>
 
     <xs:complexType name="answerType">
-        <xs:annotation>
-            <xs:documentation>
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>
                 This type represents a question in the IHK Level 1 exam format.
                 Each question has an ID, a title, and can have multiple interaction types
                 to describe the nature of the question.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
+                </xs:documentation>
+            </xs:annotation>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="title" type="xs:string"/>
-            <xs:element name="interactiontype" type="interactionType"/>
+            <xs:element name="interactiontype" type="ihkcommon:interactionType"/>
             <xs:element name="answertext" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-
-    <!-- Based on cmi.interaction.type of SCORM 2004 4th edition 
-     and http://adlnet.gov/expapi/activities/cmi.interaction from xapi profile "SCORM profile" based on
-          https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md
-    -->
-    <xs:simpleType name="interactionType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="true-false"/>
-            <xs:enumeration value="choice"/>
-            <xs:enumeration value="fill-in"/>
-            <xs:enumeration value="matching"/>
-            <xs:enumeration value="performance"/>
-            <xs:enumeration value="sequencing"/>
-            <xs:enumeration value="likert"/>
-            <xs:enumeration value="numeric"/>
-            <xs:enumeration value="other"/>
-        </xs:restriction>
-    </xs:simpleType>
 
 </xs:schema>
