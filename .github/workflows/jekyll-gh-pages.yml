@@ -49,6 +49,7 @@ jobs:
         shell: bash
         run: |
           sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/xsdviewer/schemaviewer.html ${{ github.workspace }}/docs/schemaviewer-level1.html
+          sudo cat ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level1.xsd | sed 's/\//\\\//g' | sed 's/\"/\\\"/g'
           sudo sed -i "s/ThIs-Is-ASampleSchema/$(cat ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level1.xsd | sed 's/\//\\\//g' | sed 's/\"/\\\"/g')/g" ${{ github.workspace }}/docs/schemaviewer-level1.html
 
       - name: Build Schema viewer for ihk-level2.xsd
