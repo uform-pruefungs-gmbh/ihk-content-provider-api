@@ -49,7 +49,7 @@ jobs:
         shell: bash
         run: |
           sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/xsdviewer/schemaviewer.html ${{ github.workspace }}/docs/schemaviewer-level1.html
-          ESCAPED_XSD=$(cat ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level1.xsd | sed 's/\//\\\//g' | sed 's/\"/\\\"/g')
+          ESCAPED_XSD=$(cat ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level1.xsd | sed 's:\/:\\\/:g' | sed 's:\":\\\":g')
           echo $ESCAPED_XSD
           sudo sed -i "s/ThIs-Is-ASampleSchema/$ESCAPED_XSD/g" ${{ github.workspace }}/docs/schemaviewer-level1.html
 
