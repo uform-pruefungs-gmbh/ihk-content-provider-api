@@ -1,44 +1,105 @@
 <xs:schema xmlns="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level1.xsd" elementFormDefault="qualified" id="ihkLevel1">
 
-    <xs:element name="questionList" type="questionListType"/>
+    <xs:element name="pmdata" type="pruefungsmanagerdataType"/>
+
+    <xs:complexType name="pruefungsmanagerdataType">
+        <xs:annotation>
+            <xs:documentation>Dieser Typ repräsentiert die Datenstruktur für den Prüfungsmanager im IHK Level 1 Prüfungsformat.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="metadata" type="metadataType"/>
+            <xs:element name="fragen" type="questionListType"/>
+            <xs:element name="tags" type="tagsType" minOccurs="0"/>
+
+            <xs:sequence>
+                <xs:annotation>
+                    <xs:documentation>Hier können weitere Inhalte bereitgestellt werden. Dies wird als IHK Level 2-Content bezeichnet und ist in der Regel anwendungsspezifisch.</xs:documentation>
+                </xs:annotation>
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="metadataType">
+        <xs:annotation>
+            <xs:documentation>
+                Dieser Typ repräsentiert Metadaten für das IHK Level 1 Prüfungsformat.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="berufenummer" type="xs:string"/>
+            <xs:element name="pruefungszeitpunkt">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="[FSHW][0-9][0-9]"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="pruefungsbereich" type="xs:string"/>
+            <xs:element name="erstellungseinrichtung" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="questionListType">
         <xs:annotation>
             <xs:documentation>
-                This type represents a list of questions in the IHK Level 1 exam format.
-                It contains multiple question elements.
+                Dieser Typ repräsentiert eine Liste von Fragen im IHK Level 1 Prüfungsformat.
+                Er enthält mehrere frage-Elemente.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="question" type="questionType" maxOccurs="unbounded"/>
+            <xs:element name="frage" type="questionType" maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:attribute name="berufenummer" type="xs:string" />
-        <xs:attribute name="pruefungszeitpunkt">
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="[FSHW][0-9][0-9]"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="questionType">
         <xs:annotation>
             <xs:documentation>
-                This type represents a question in the IHK Level 1 exam format.
-                Each question has an ID, a title, and can have multiple interaction types
-                to describe the nature of the question.
+                Dieser Typ repräsentiert eine Frage im IHK Level 1 Prüfungsformat.
+                Jede Frage hat eine ID, einen Titel und kann mehrere Interaktionstypen haben,
+                um die Art der Frage zu beschreiben.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
-            <xs:element name="title" type="xs:string"/>
+            <xs:element name="titel" type="xs:string"/>
             <xs:element name="interactiontypes" type="interactionType" maxOccurs="unbounded"/>
+            <xs:element name="tags" type="tagsType" minOccurs="0"/>
+
             <xs:sequence>
                 <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tagsType">
+        <xs:annotation>
+            <xs:documentation>
+                Dieser Typ repräsentiert eine Sammlung von Tags, die für die Kategorisierung oder
+                Identifikation von Inhalten im IHK Level 1 Prüfungsformat verwendet werden können.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="tag" type="tagType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tagType">
+        <xs:annotation>
+            <xs:documentation>
+                Dieser Typ repräsentiert ein einzelnes Tag, das für die Kategorisierung oder
+                Identifikation von Inhalten im IHK Level 1 Prüfungsformat verwendet wird.
+                Jedes Tag hat einen Namen, einen Wert und einen Typ.
+                Der Typ kann verwendet werden, um die Art des Tags zu spezifizieren, z.B. "unbewertet".
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="tagtype" type="xs:string" use="required"/>
     </xs:complexType>
 
     <!-- Based on cmi.interaction.type of SCORM 2004 4th edition 

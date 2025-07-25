@@ -64,11 +64,9 @@ Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignab
 <courseStructure xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
     xmlns:ihk="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
     xmlns:ihkcontent="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecord.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd ../api-definitions/src/main/resources/xsd/cmi5.xsd
-    https://apidocs.pruefung.io/xsd/ihk-level1.xsd ../api-definitions/src/main/resources/xsd/ihk-level1.xsd
-    https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd ../api-definitions/src/main/resources/xsd/ihk-level2-executionrecords.xsd" xsi:targetNamespace="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <course id="https://example.pruefung.io/courses/medienkaufleute-2025">
+    <course id="https://example.pruefung.io/courses/zp/f25/5598/medienkaufleute-2025">
         <title>
             <langstring lang="de">ZP F25 Medienkaufleute Digital und Print</langstring>
         </title>
@@ -76,29 +74,39 @@ Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignab
             <langstring lang="de">IHK-Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print</langstring>
         </description>
     </course>
-    <au id="https://example.pruefung.io/au/medienkaufleute-2025" moveOn="CompletedAndPassed" masteryScore="0.7" launchMethod="OwnWindow" activityType="assessment">
+    <au id="https://example.pruefung.io/au/zp/f25/5598/wiso/medienkaufleute-2025-wiso" moveOn="Completed" masteryScore="1" launchMethod="AnyWindow" activityType="examination">
         <title>
-            <langstring lang="de">ZP F25 Medienkaufleute Digital und Print</langstring>
+            <langstring lang="de">ZP F25 Medienkaufleute Digital und Print Wiso</langstring>
         </title>
         <description>
-            <langstring lang="de">IHK Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print</langstring>
+            <langstring lang="de">IHK Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print. Prüfungsbereich Wiso</langstring>
         </description>
-        <objectives>
-            <objective idref="https://example.pruefung.io/objectives/medienkaufleute-2025/1"></objective>
-            <!-- Level 1: Definition der Prüfungsfragen -->
-            <ihk:questionList berufenummer="5598" pruefungszeitpunkt="F25">
-                <ihk:question>
-                    <ihk:id>1</ihk:id>
-                    <ihk:title>Was ist der Hauptzweck des Marketings?</ihk:title>
-                    <ihk:interactiontypes>fill-in</ihk:interactiontypes>
-                </ihk:question>
-            </ihk:questionList>
+        <url>https://zp.pruefung.io</url>
 
-            <!-- Level 2: Resultentries by user for transmission to GfI -->
+        <!-- Level 1: Definition der Prüfungsfragen -->
+        <ihk:pmdata>
+            <ihk:metadata>
+                <ihk:berufenummer>5598</ihk:berufenummer>
+                <ihk:pruefungszeitpunkt>F25</ihk:pruefungszeitpunkt>
+                <ihk:pruefungsbereich>Wiso</ihk:pruefungsbereich>
+                <ihk:erstellungseinrichtung>ZPA</ihk:erstellungseinrichtung>
+            </ihk:metadata>
+
+            <ihk:fragen>
+                <ihk:frage>
+                    <ihk:id>1</ihk:id>
+                    <ihk:titel>Was ist der Hauptzweck des Marketings?</ihk:titel>
+                    <ihk:interactiontypes>fill-in</ihk:interactiontypes>
+                </ihk:frage>
+            </ihk:fragen>
+
+            <!-- Level 2: Content -->
             <ihkcontent:questions>
                 <ihkcontent:question>
                     <ihkcontent:id>1</ihkcontent:id>
                     <ihkcontent:title>Was ist der Hauptzweck des Marketings?</ihkcontent:title>
+
+                    <!-- Level 2: Austausch von Erfassungen vom Prüfungsmanager zur GfI -->
                     <ihkcontent:answerlist>
                         <ihkcontent:questionid>1</ihkcontent:questionid>
                         <ihkcontent:participantid>12345</ihkcontent:participantid>
@@ -113,12 +121,12 @@ Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignab
                     </ihkcontent:answerlist>
                 </ihkcontent:question>
             </ihkcontent:questions>
+        </ihk:pmdata>
 
-        </objectives>
-        <url>https://example.pruefung.io/launch/medienkaufleute-2025</url>
     </au>
 
 </courseStructure>
+
 ```
 
 Diese XML-Struktur enthält:
