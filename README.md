@@ -49,15 +49,26 @@ Die Definitionen sind in XSD (XML Schema Definition) und OpenAPI 3.0.x-Format ve
 
 ## Technische Schnittstellendefinitionen
 
+### Beschreibung der API und SPI
+
 Die technischen Definitionen beschreiben die Schnittstellen im OpenAPI-Format V3
 
 [Technische Definition der API](api.html)
 
 [Technische Definition der SPI](spi.html)
 
+### Beispielstruktur für CMI5-konforme Prüfungsinhalte mit den Leveln 0, 1 und 2
+
+Die Beispielstruktur zeigt, wie Prüfungsinhalte in CMI5 konform strukturiert werden können. Sie enthält eine Assignable Unit (AU) mit den erforderlichen Metadaten und Prüfungsfragen.
+
+[XSD-Schema für das IHK-Level 1](./docs/schemaviewer-level1.html)
+
+[XSD-Schema für das IHK-Level 2](./docs/schemaviewer-level2-executionrecords.html)
+
 ## CMI5 Beispielstruktur für Medienkaufleute Digital und Print
 
-Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignable Unit (AU) für "Medienkaufleute Digital und Print":
+Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignable Unit (AU) für "Medienkaufleute
+Digital und Print":
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

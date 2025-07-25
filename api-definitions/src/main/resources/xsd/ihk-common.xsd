@@ -1,0 +1,50 @@
+<xs:schema xmlns="https://apidocs.pruefung.io/xsd/ihk-common.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-common.xsd" elementFormDefault="qualified" id="ihkcommon">
+
+    <xs:complexType name="tagsType">
+        <xs:annotation>
+            <xs:documentation>
+                Dieser Typ repräsentiert eine Sammlung von Tags, die für die Kategorisierung oder
+                Identifikation von Inhalten im IHK Level 1 Prüfungsformat verwendet werden können.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="tag" type="tagType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tagType">
+        <xs:annotation>
+            <xs:documentation>
+                Dieser Typ repräsentiert ein einzelnes Tag, das für die Kategorisierung oder
+                Identifikation von Inhalten im IHK Level 1 Prüfungsformat verwendet wird.
+                Jedes Tag hat einen Namen, einen Wert und einen Typ.
+                Der Typ kann verwendet werden, um die Art des Tags zu spezifizieren, z.B. "unbewertet".
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="wert" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="tagtyp" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- Based on cmi.interaction.type of SCORM 2004 4th edition 
+     and http://adlnet.gov/expapi/activities/cmi.interaction from xapi profile "SCORM profile" based on
+          https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md
+    -->
+    <xs:simpleType name="interactionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="true-false"/>
+            <xs:enumeration value="choice"/>
+            <xs:enumeration value="fill-in"/>
+            <xs:enumeration value="matching"/>
+            <xs:enumeration value="performance"/>
+            <xs:enumeration value="sequencing"/>
+            <xs:enumeration value="likert"/>
+            <xs:enumeration value="numeric"/>
+            <xs:enumeration value="other"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

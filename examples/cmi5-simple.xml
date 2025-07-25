@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <courseStructure xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
     xmlns:ihk="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
-    xmlns:ihkcontent="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecord.xsd"
+    xmlns:ihkexecutionrecord="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd"
+    xmlns:ihkcommon="https://apidocs.pruefung.io/xsd/ihk-common.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd ../api-definitions/src/main/resources/xsd/cmi5.xsd
     https://apidocs.pruefung.io/xsd/ihk-level1.xsd ../api-definitions/src/main/resources/xsd/ihk-level1.xsd
     https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd ../api-definitions/src/main/resources/xsd/ihk-level2-executionrecords.xsd" xsi:targetNamespace="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd">
@@ -39,42 +40,42 @@
                     <ihk:interactiontypes>fill-in</ihk:interactiontypes>
 
                     <ihk:tags>
-                        <ihk:tag tagtype="state">
-                            <ihk:name>status</ihk:name>
-                            <ihk:value>freigegeben</ihk:value>
-                        </ihk:tag>
+                        <ihkcommon:tag tagtyp="state">
+                            <ihkcommon:name>status</ihkcommon:name>
+                            <ihkcommon:wert>freigegeben</ihkcommon:wert>
+                        </ihkcommon:tag>
                     </ihk:tags>
                 </ihk:frage>
             </ihk:fragen>
 
             <ihk:tags>
-                <ihk:tag tagtype="state">
-                    <ihk:name>status</ihk:name>
-                    <ihk:value>freigegeben</ihk:value>
-                </ihk:tag>
+                <ihkcommon:tag tagtyp="state">
+                    <ihkcommon:name>status</ihkcommon:name>
+                    <ihkcommon:wert>freigegeben</ihkcommon:wert>
+                </ihkcommon:tag>
             </ihk:tags>
 
             <!-- Level 2: Content -->
-            <ihkcontent:questions>
-                <ihkcontent:question>
-                    <ihkcontent:id>1</ihkcontent:id>
-                    <ihkcontent:title>Was ist der Hauptzweck des Marketings?</ihkcontent:title>
+            <ihkexecutionrecord:questions>
+                <ihkexecutionrecord:question>
+                    <ihkexecutionrecord:id>1</ihkexecutionrecord:id>
+                    <ihkexecutionrecord:title>Was ist der Hauptzweck des Marketings?</ihkexecutionrecord:title>
 
                     <!-- Level 2: Austausch von Erfassungen vom Prüfungsmanager zur GfI -->
-                    <ihkcontent:answerlist>
-                        <ihkcontent:questionid>1</ihkcontent:questionid>
-                        <ihkcontent:participantid>12345</ihkcontent:participantid>
-                        <ihkcontent:participationid>67890</ihkcontent:participationid>
-                        <ihkcontent:gfinummer>1234567890</ihkcontent:gfinummer>
-                        <ihkcontent:answer>
-                            <ihkcontent:id>2</ihkcontent:id>
-                            <ihkcontent:title>Kundenbindung stärken</ihkcontent:title>
-                            <ihkcontent:interactiontype>fill-in</ihkcontent:interactiontype>
-                            <ihkcontent:answertext>Test</ihkcontent:answertext>
-                        </ihkcontent:answer>
-                    </ihkcontent:answerlist>
-                </ihkcontent:question>
-            </ihkcontent:questions>
+                    <ihkexecutionrecord:answerlist>
+                        <ihkexecutionrecord:questionid>1</ihkexecutionrecord:questionid>
+                        <ihkexecutionrecord:participantid>12345</ihkexecutionrecord:participantid>
+                        <ihkexecutionrecord:participationid>67890</ihkexecutionrecord:participationid>
+                        <ihkexecutionrecord:gfinummer>1234567890</ihkexecutionrecord:gfinummer>
+                        <ihkexecutionrecord:answer>
+                            <ihkexecutionrecord:id>2</ihkexecutionrecord:id>
+                            <ihkexecutionrecord:title>Kundenbindung stärken</ihkexecutionrecord:title>
+                            <ihkexecutionrecord:interactiontype>fill-in</ihkexecutionrecord:interactiontype>
+                            <ihkexecutionrecord:answertext>Test</ihkexecutionrecord:answertext>
+                        </ihkexecutionrecord:answer>
+                    </ihkexecutionrecord:answerlist>
+                </ihkexecutionrecord:question>
+            </ihkexecutionrecord:questions>
         </ihk:pmdata>
 
     </au>

@@ -1,16 +1,19 @@
 <xs:schema xmlns="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level1.xsd" elementFormDefault="qualified" id="ihkLevel1">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:ihkcommon="https://apidocs.pruefung.io/xsd/ihk-common.xsd" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level1.xsd" elementFormDefault="qualified" id="ihkLevel1">
+
+    <xs:import namespace="https://apidocs.pruefung.io/xsd/ihk-common.xsd" schemaLocation="ihk-common.xsd"/>
 
     <xs:element name="pmdata" type="pruefungsmanagerdataType"/>
 
     <xs:complexType name="pruefungsmanagerdataType">
-        <xs:annotation>
-            <xs:documentation>Dieser Typ repräsentiert die Datenstruktur für den Prüfungsmanager im IHK Level 1 Prüfungsformat.</xs:documentation>
-        </xs:annotation>
         <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>Dieser Typ repräsentiert die Datenstruktur für den Prüfungsmanager im IHK Level 1 Prüfungsformat.</xs:documentation>
+            </xs:annotation>
             <xs:element name="metadata" type="metadataType"/>
             <xs:element name="fragen" type="questionListType"/>
-            <xs:element name="tags" type="tagsType" minOccurs="0"/>
+            <xs:element name="tags" type="ihkcommon:tagsType" minOccurs="0"/>
 
             <xs:sequence>
                 <xs:annotation>
@@ -23,12 +26,12 @@
     </xs:complexType>
 
     <xs:complexType name="metadataType">
-        <xs:annotation>
-            <xs:documentation>
-                Dieser Typ repräsentiert Metadaten für das IHK Level 1 Prüfungsformat.
-            </xs:documentation>
-        </xs:annotation>
         <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>
+                Dieser Typ repräsentiert Metadaten für das IHK Level 1 Prüfungsformat.
+                </xs:documentation>
+            </xs:annotation>
             <xs:element name="berufenummer" type="xs:string"/>
             <xs:element name="pruefungszeitpunkt">
                 <xs:simpleType>
@@ -43,81 +46,35 @@
     </xs:complexType>
 
     <xs:complexType name="questionListType">
-        <xs:annotation>
-            <xs:documentation>
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>
                 Dieser Typ repräsentiert eine Liste von Fragen im IHK Level 1 Prüfungsformat.
                 Er enthält mehrere frage-Elemente.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
+                </xs:documentation>
+            </xs:annotation>
             <xs:element name="frage" type="questionType" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="questionType">
-        <xs:annotation>
-            <xs:documentation>
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>
                 Dieser Typ repräsentiert eine Frage im IHK Level 1 Prüfungsformat.
                 Jede Frage hat eine ID, einen Titel und kann mehrere Interaktionstypen haben,
                 um die Art der Frage zu beschreiben.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
+                </xs:documentation>
+            </xs:annotation>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="titel" type="xs:string"/>
-            <xs:element name="interactiontypes" type="interactionType" maxOccurs="unbounded"/>
-            <xs:element name="tags" type="tagsType" minOccurs="0"/>
+            <xs:element name="interactiontypes" type="ihkcommon:interactionType" maxOccurs="unbounded"/>
+            <xs:element name="tags" type="ihkcommon:tagsType" minOccurs="0"/>
 
             <xs:sequence>
                 <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:sequence>
     </xs:complexType>
-
-    <xs:complexType name="tagsType">
-        <xs:annotation>
-            <xs:documentation>
-                Dieser Typ repräsentiert eine Sammlung von Tags, die für die Kategorisierung oder
-                Identifikation von Inhalten im IHK Level 1 Prüfungsformat verwendet werden können.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="tag" type="tagType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="tagType">
-        <xs:annotation>
-            <xs:documentation>
-                Dieser Typ repräsentiert ein einzelnes Tag, das für die Kategorisierung oder
-                Identifikation von Inhalten im IHK Level 1 Prüfungsformat verwendet wird.
-                Jedes Tag hat einen Namen, einen Wert und einen Typ.
-                Der Typ kann verwendet werden, um die Art des Tags zu spezifizieren, z.B. "unbewertet".
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="name" type="xs:string"/>
-            <xs:element name="value" type="xs:string"/>
-        </xs:sequence>
-        <xs:attribute name="tagtype" type="xs:string" use="required"/>
-    </xs:complexType>
-
-    <!-- Based on cmi.interaction.type of SCORM 2004 4th edition 
-     and http://adlnet.gov/expapi/activities/cmi.interaction from xapi profile "SCORM profile" based on
-          https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md
-    -->
-    <xs:simpleType name="interactionType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="true-false"/>
-            <xs:enumeration value="choice"/>
-            <xs:enumeration value="fill-in"/>
-            <xs:enumeration value="matching"/>
-            <xs:enumeration value="performance"/>
-            <xs:enumeration value="sequencing"/>
-            <xs:enumeration value="likert"/>
-            <xs:enumeration value="numeric"/>
-            <xs:enumeration value="other"/>
-        </xs:restriction>
-    </xs:simpleType>
 
 </xs:schema>
