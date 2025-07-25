@@ -50,14 +50,14 @@ jobs:
         run: |
           sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/xsdviewer/schemaviewer.html ${{ github.workspace }}/docs/schemaviewer-level1.html
           ESCAPED_XSD=$(cat ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level1.xsd | sed 's:\/:\\\/:g' | sed 's:\":\\\":g')
-          echo $ESCAPED_XSD
-          sudo sed -i "s/ThIs-Is-ASampleSchema/$ESCAPED_XSD/g" ${{ github.workspace }}/docs/schemaviewer-level1.html
+          sudo awk -v xsd="$ESCAPED_XSD" '{gsub(/ThIs-Is-ASampleSchema/, xsd); print}' ${{ github.workspace }}/docs/schemaviewer-level1.html > temp && sudo mv temp ${{ github.workspace }}/docs/schemaviewer-level1.html
 
       - name: Build Schema viewer for ihk-level2.xsd
         shell: bash
         run: |
           sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/xsdviewer/schemaviewer.html ${{ github.workspace }}/docs/schemaviewer-level2.html
-          sudo sed -i "s/ThIs-Is-ASampleSchema/$(cat ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level2-executionrecords.xsd | sed 's/\//\\\//g' | sed 's/\"/\\\"/g')/g" ${{ github.workspace }}/docs/schemaviewer-level2.html
+          ESCAPED_XSD=$(cat ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level2-executionrecords.xsd)
+          sudo awk -v xsd="$ESCAPED_XSD" '{gsub(/ThIs-Is-ASampleSchema/, xsd); print}' ${{ github.workspace }}/docs/schemaviewer-level2.html > temp && sudo mv temp ${{ github.workspace }}/docs/schemaviewer-level2.html
 
       - name: Generate SPI- and API-Docs into docs dir
         shell: bash
