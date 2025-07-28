@@ -1100,13 +1100,26 @@ SOFTWARE.
         var previousIndex = null;
         var nodeIndex = null;
         var i = null;
+        var mynode = Nodes[parentIndex];
 
         for (i = 0; i < childNodes.length; i++) {
             if (childNodes[i].nodeType == 1) {
                 nodeName = childNodes[i].nodeName;
-                /*if (nodeName == "xs:annotation") {
-                  // todo
-                }*/
+                if (nodeName == "xs:annotation") {
+                    // todo
+                    var annotationNode = GetFirstChildNode(node, "xs:annotation");
+                    if (annotationNode) {
+                        mynode.annotation = "Trace-1";
+                        docNode = GetFirstChildNode(annotationNode, "xs:documentation");
+                        if (docNode) {
+                            mynode.annotation = "Trace-2";
+                            mynode.annotation = docNode.textContent;   //.nodeValue;
+                        }
+
+                        console.log("Annotation found: ", mynode);
+                    }
+                }
+
                 if (nodeName == "xs:choice" || nodeName == "xs:sequence") {
                     previousIndex = nodeIndex;
                     nodeIndex = AddNode(childNodes[i], parentIndex, previousIndex);
@@ -2186,7 +2199,7 @@ SOFTWARE.
     function DrawAnnotation(ctx, nodeIndex) {
         var node = Nodes[nodeIndex];
         var y = node.bottom + nAnnotationDistance;
-
+        console.log("DrawAnnotation: nodeIndex = " + nodeIndex, node);
         if (node.maxOccurs > 1 || node.maxOccurs < 0)
             y += nMultipleNodeOffset;
 

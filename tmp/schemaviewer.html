@@ -1100,13 +1100,26 @@ SOFTWARE.
         var previousIndex = null;
         var nodeIndex = null;
         var i = null;
+        var mynode = Nodes[parentIndex];
 
         for (i = 0; i < childNodes.length; i++) {
             if (childNodes[i].nodeType == 1) {
                 nodeName = childNodes[i].nodeName;
-                /*if (nodeName == "xs:annotation") {
-                  // todo
-                }*/
+                if (nodeName == "xs:annotation") {
+                    // todo
+                    var annotationNode = GetFirstChildNode(node, "xs:annotation");
+                    if (annotationNode) {
+                        mynode.annotation = "Trace-1";
+                        docNode = GetFirstChildNode(annotationNode, "xs:documentation");
+                        if (docNode) {
+                            mynode.annotation = "Trace-2";
+                            mynode.annotation = docNode.textContent;   //.nodeValue;
+                        }
+
+                        console.log("Annotation found: ", mynode);
+                    }
+                }
+
                 if (nodeName == "xs:choice" || nodeName == "xs:sequence") {
                     previousIndex = nodeIndex;
                     nodeIndex = AddNode(childNodes[i], parentIndex, previousIndex);
@@ -1776,22 +1789,44 @@ SOFTWARE.
 
     function SampleSchema() {
         var textarea = document.getElementById("schema-text");
-        var text = `<xs:schema xmlns="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd"
+        var text = `<xs:schema xmlns="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:ihkcommon="https://apidocs.pruefung.io/xsd/ihk-common.xsd" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd" elementFormDefault="qualified" id="ihkLevel2">
+    xmlns:ihkcommon="https://apidocs.pruefung.io/xsd/ihk-common.xsd" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level1.xsd" elementFormDefault="qualified" id="ihkLevel1">
 
     <xs:import namespace="https://apidocs.pruefung.io/xsd/ihk-common.xsd" schemaLocation="ihk-common.xsd"/>
 
-    <xs:element name="executiondata" type="executionrecordType"/>
+    <xs:element name="pmdata" type="pruefungsmanagerdataType">
+        <xs:annotation>
+            <xs:documentation>Dieser Typ repräsentiert die Datenstruktur für den Prüfungsmanager im IHK Level 1 Prüfungsformat.</xs:documentation>
+        </xs:annotation>
+    </xs:element>
 
-    <xs:complexType name="executionrecordType">
+
+    <xs:complexType name="pruefungsmanagerdataType">
         <xs:sequence>
-            <xs:annotation>
-                <xs:documentation>Dieser Typ repräsentiert die Datenstruktur für die Ausführung von Prüfungen im IHK Level 2 Prüfungsformat.</xs:documentation>
-            </xs:annotation>
-            <xs:element name="metadata" type="metadataType"/>
-            <xs:element name="fragen" type="questionListType"/>
-            <xs:element name="tags" type="ihkcommon:tagsType" minOccurs="0"/>
+            <xs:element name="metadata" type="metadataType">
+                <xs:annotation>
+                    <xs:documentation>Dieser Typ repräsentiert Metadaten für das IHK Level 1 Prüfungsformat.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="fragen" type="questionListType">
+                <xs:annotation>
+                    <xs:documentation>
+Dieser Typ repräsentiert eine Liste von Fragen im IHK Level 1 Prüfungsformat.
+Er enthält mehrere frage-Elemente.
+                    </xs:documentation>
+                </xs:annotation>
+
+            </xs:element>
+            <xs:element name="tags" type="ihkcommon:tagsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+Dieser Typ repräsentiert eine Sammlung von Tags, die für die Kategorisierung oder
+Identifikation von Inhalten im IHK Level 1 Prüfungsformat verwendet werden können.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
 
             <xs:sequence>
                 <xs:annotation>
@@ -1805,81 +1840,42 @@ SOFTWARE.
 
     <xs:complexType name="metadataType">
         <xs:sequence>
-            <xs:annotation>
-                <xs:documentation>
-                Dieser Typ repräsentiert Metadaten für das IHK Level 2 Prüfungsformat.
-                </xs:documentation>
-            </xs:annotation>
-            <xs:element name="kammernummer" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation>Kammernummer der IHK, die die Prüfung durchführt.</xs:documentation>
-                </xs:annotation>
+            <xs:element name="berufenummer" type="xs:string"/>
+            <xs:element name="pruefungszeitpunkt">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="[FSHW][0-9][0-9]"/>
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
+            <xs:element name="pruefungsbereich" type="xs:string"/>
+            <xs:element name="erstellungseinrichtung" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="questionListType">
         <xs:sequence>
-            <xs:annotation>
-                <xs:documentation>
-                This type represents a list of questions in the IHK Level 1 exam format.
-                It contains multiple question elements.
-                </xs:documentation>
-            </xs:annotation>
-            <xs:element name="question" type="questionType" maxOccurs="unbounded"/>
+            <xs:element name="frage" type="questionType" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+Dieser Typ repräsentiert eine Frage im IHK Level 1 Prüfungsformat.
+Jede Frage hat eine ID, einen Titel und kann mehrere Interaktionstypen haben, um die Art der Frage zu beschreiben.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="questionType">
         <xs:sequence>
-            <xs:annotation>
-                <xs:documentation>
-                This type represents a question in the IHK Level 2 exam format.
-                </xs:documentation>
-            </xs:annotation>
             <xs:element name="id" type="xs:string"/>
-            <xs:element name="title" type="xs:string"/>
-            <xs:sequence>
-                <xs:element name="answerlist" type="answerListType" maxOccurs="unbounded"/>
-            </xs:sequence>
+            <xs:element name="titel" type="xs:string"/>
+            <xs:element name="interactiontypes" type="ihkcommon:interactionType" maxOccurs="unbounded"/>
+            <xs:element name="tags" type="ihkcommon:tagsType" minOccurs="0"/>
+
             <xs:sequence>
                 <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="answerListType">
-        <xs:sequence>
-            <xs:annotation>
-                <xs:documentation>
-                This type represents a list of answers in the IHK Level 2 exam format.
-                It contains multiple answer elements.
-                </xs:documentation>
-            </xs:annotation>
-            <xs:element name="questionid" type="xs:string" minOccurs="1"></xs:element>
-            <xs:element name="participantid" type="xs:string"></xs:element>
-            <xs:element name="participationid" type="xs:string" minOccurs="0"></xs:element>
-            <xs:element name="gfinummer" type="xs:string" minOccurs="0"></xs:element>
-            <xs:sequence>
-                <xs:element name="answer" type="answerType" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:sequence>
-        <xs:attribute name="id" type="xs:string" />
-    </xs:complexType>
-
-    <xs:complexType name="answerType">
-        <xs:sequence>
-            <xs:annotation>
-                <xs:documentation>
-                This type represents a question in the IHK Level 1 exam format.
-                Each question has an ID, a title, and can have multiple interaction types
-                to describe the nature of the question.
-                </xs:documentation>
-            </xs:annotation>
-            <xs:element name="id" type="xs:string"/>
-            <xs:element name="title" type="xs:string"/>
-            <xs:element name="interactiontype" type="ihkcommon:interactionType"/>
-            <xs:element name="answertext" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -2293,7 +2289,7 @@ SOFTWARE.
     function DrawAnnotation(ctx, nodeIndex) {
         var node = Nodes[nodeIndex];
         var y = node.bottom + nAnnotationDistance;
-
+        console.log("DrawAnnotation: nodeIndex = " + nodeIndex, node);
         if (node.maxOccurs > 1 || node.maxOccurs < 0)
             y += nMultipleNodeOffset;
 
