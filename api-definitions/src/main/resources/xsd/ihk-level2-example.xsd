@@ -1,0 +1,6 @@
+<xs:schema xmlns="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecords.xsd" elementFormDefault="qualified" id="ihkLevel2">
+
+    <xs:element name="example" type="xs:anySimpleType"/>
+
+</xs:schema>

@@ -63,7 +63,7 @@ Die Beispielstruktur zeigt, wie Prüfungsinhalte in CMI5 konform strukturiert we
 
 [XSD-Schema für das IHK-Level 1](./docs/schemaviewer-level1.html)
 
-[XSD-Schema für das IHK-Level 2](./docs/schemaviewer-level2-executionrecords.html)
+[XSD-Schema für das IHK-Level 2 (Beispielschema)](./docs/schemaviewer-level2-example.html)
 
 ## CMI5 Beispielstruktur für Medienkaufleute Digital und Print
 
@@ -74,7 +74,7 @@ Digital und Print":
 <?xml version="1.0" encoding="UTF-8"?>
 <courseStructure xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
     xmlns:ihk="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
-    xmlns:ihkcontent="https://apidocs.pruefung.io/xsd/ihk-level2-executionrecord.xsd"
+    xmlns:ihkcontent="https://apidocs.pruefung.io/xsd/ihk-level2-example.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <course id="https://example.pruefung.io/courses/zp/f25/5598/medienkaufleute-2025">
@@ -112,26 +112,9 @@ Digital und Print":
             </ihk:fragen>
 
             <!-- Level 2: Content -->
-            <ihkcontent:questions>
-                <ihkcontent:question>
-                    <ihkcontent:id>1</ihkcontent:id>
-                    <ihkcontent:title>Was ist der Hauptzweck des Marketings?</ihkcontent:title>
+            <ihkcontent:example>
 
-                    <!-- Level 2: Austausch von Erfassungen vom Prüfungsmanager zur GfI -->
-                    <ihkcontent:answerlist>
-                        <ihkcontent:questionid>1</ihkcontent:questionid>
-                        <ihkcontent:participantid>12345</ihkcontent:participantid>
-                        <ihkcontent:participationid>67890</ihkcontent:participationid>
-                        <ihkcontent:gfinummer>1234567890</ihkcontent:gfinummer>
-                        <ihkcontent:answer>
-                            <ihkcontent:id>2</ihkcontent:id>
-                            <ihkcontent:title>Kundenbindung stärken</ihkcontent:title>
-                            <ihkcontent:interactiontype>fill-in</ihkcontent:interactiontype>
-                            <ihkcontent:answertext>Test</ihkcontent:answertext>
-                        </ihkcontent:answer>
-                    </ihkcontent:answerlist>
-                </ihkcontent:question>
-            </ihkcontent:questions>
+            </ihkcontent:example>
         </ihk:pmdata>
 
     </au>
