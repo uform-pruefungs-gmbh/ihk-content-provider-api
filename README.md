@@ -61,9 +61,9 @@ Die technischen Definitionen beschreiben die Schnittstellen im OpenAPI-Format V3
 
 Die Beispielstruktur zeigt, wie Prüfungsinhalte in CMI5 konform strukturiert werden können. Sie enthält eine Assignable Unit (AU) mit den erforderlichen Metadaten und Prüfungsfragen.
 
-[XSD-Schema für das IHK-Level 1](./docs/schemaviewer-level1.html)
+[XSD-Schema für das IHK-Level 1](./schemaviewer-level1.html)
 
-[XSD-Schema für das IHK-Level 2 (Beispielschema)](./docs/schemaviewer-level2-example.html)
+[XSD-Schema für das IHK-Level 2 (Beispielschema)](./schemaviewer-level2-example.html)
 
 ## CMI5 Beispielstruktur für Medienkaufleute Digital und Print
 
