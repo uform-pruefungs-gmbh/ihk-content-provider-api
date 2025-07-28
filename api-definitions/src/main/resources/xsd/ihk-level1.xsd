@@ -2,7 +2,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:ihkcommon="https://apidocs.pruefung.io/xsd/ihk-common.xsd" targetNamespace="https://apidocs.pruefung.io/xsd/ihk-level1.xsd" elementFormDefault="qualified" id="ihkLevel1">
 
-    <xs:import namespace="https://apidocs.pruefung.io/xsd/ihk-common.xsd" schemaLocation="ihk-common.xsd"/>
+    <xs:import namespace="https://apidocs.pruefung.io/xsd/ihk-common.xsd"/>
 
     <xs:element name="pmdata" type="pruefungsmanagerdataType">
         <xs:annotation>
