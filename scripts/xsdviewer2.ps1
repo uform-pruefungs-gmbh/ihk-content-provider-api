@@ -20,7 +20,7 @@ try {
     New-Item -ItemType Directory -Force -Path ".\tmp" | Out-Null
 
     $schemaViewerOutputPath = Join-Path $serverRoot "schemaviewer.html"
-    $cmi5ContentPath = Join-Path $PSScriptRoot "..\api-definitions\src\main\resources\xsd\ihk-level2-executionrecords.xsd"
+    $cmi5ContentPath = Join-Path $PSScriptRoot "..\api-definitions\src\main\resources\xsd\ihk-level2-example.xsd"
 
     # Read the content of both files
     $schemaViewerContent = Get-Content -Path $htmlPath -Raw
