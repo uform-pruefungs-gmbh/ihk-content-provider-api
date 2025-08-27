@@ -45,89 +45,129 @@ Das Datenmodel ist in mehrere Level unterteilt, die jeweils unterschiedliche Asp
 
 ![Überblick über das Datenaustauschmodell](./docs/images/bild-datenaustausch-ueberblick.png)
 
-Die Definitionen sind in XSD (XML Schema Definition) und OpenAPI 3.0.x-Format verfügbar.
+Die Definitionen sind in JSON Schema und OpenAPI 3.0.x-Format verfügbar.
 
 ## Technische Schnittstellendefinitionen
 
-### Beschreibung der API und SPI
+### Beschreibung der APIs
 
 Die technischen Definitionen beschreiben die Schnittstellen im OpenAPI-Format V3
 
-[Technische Definition der API](api.html)
+[Technische Definition der Content Provider API](api.html)
 
-[Technische Definition der SPI](spi.html)
+[Technische Definition der Content Provider SPI](spi.html)
 
-### Beispielstruktur für CMI5-konforme Prüfungsinhalte mit den Leveln 0, 1 und 2
+[Technische Definition der Participants API](participants-api.html)
 
-Die Beispielstruktur zeigt, wie Prüfungsinhalte in CMI5 konform strukturiert werden können. Sie enthält eine Assignable Unit (AU) mit den erforderlichen Metadaten und Prüfungsfragen.
+[Technische Definition der Execution Records API](executionrecord-api.html)
 
-[XSD-Schema für das IHK-Level 1](./schemaviewer-level1.html) oder als XSD-Schema-Datei <a href="./xsd/ihk-level1.xsd" target="_blank">ihk-level1.xsd</a>
+### JSON Schema-Definitionen für Prüfungsdatenstrukturen
 
-[XSD-Schema für das IHK-Level 2 (Beispielschema)](./schemaviewer-level2-example.html)
+Die JSON Schema-Definitionen beschreiben die Datenstrukturen für die verschiedenen Level des Datenaustauschmodells:
 
-## CMI5 Beispielstruktur für Medienkaufleute Digital und Print
+**Wiederverwendbare Typdefinitionen:**
 
-Nachfolgend ein Beispiel für eine CMI5-konforme XML-Struktur mit einer Assignable Unit (AU) für "Medienkaufleute
-Digital und Print":
+- [CMI5 Types](./types/cmi5.json) - CMI5-konforme Kursstrukturen und Assignable Units
+- [IHK Common Types](./types/ihk-common.json) - Grundlegende Datentypen für das IHK-System
+- [IHK Level 1 Types](./types/ihk-level1.json) - Strukturen für Prüfungsfragen und Metadaten
+- [IHK Level 2 Types](./types/ihk-level2-example.json) - Erweiterte Beispieltypen
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<courseStructure xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
-    xmlns:ihk="https://apidocs.pruefung.io/xsd/ihk-level1.xsd"
-    xmlns:ihkcontent="https://apidocs.pruefung.io/xsd/ihk-level2-example.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+## JSON-Beispielstruktur für CMI5-konforme Prüfungsinhalte
 
-    <course id="https://example.pruefung.io/courses/zp/f25/5598/medienkaufleute-2025">
-        <title>
-            <langstring lang="de">ZP F25 Medienkaufleute Digital und Print</langstring>
-        </title>
-        <description>
-            <langstring lang="de">IHK-Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print</langstring>
-        </description>
-    </course>
-    <au id="https://example.pruefung.io/au/zp/f25/5598/wiso/medienkaufleute-2025-wiso" moveOn="Completed" masteryScore="1" launchMethod="AnyWindow" activityType="examination">
-        <title>
-            <langstring lang="de">ZP F25 Medienkaufleute Digital und Print Wiso</langstring>
-        </title>
-        <description>
-            <langstring lang="de">IHK Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print. Prüfungsbereich Wiso</langstring>
-        </description>
-        <url>https://zp.pruefung.io</url>
+Nachfolgend ein Beispiel für eine CMI5-konforme JSON-Struktur mit einer Assignable Unit (AU) für "Medienkaufleute Digital und Print":
 
-        <!-- Level 1: Definition der Prüfungsfragen -->
-        <ihk:pmdata>
-            <ihk:metadata>
-                <ihk:berufenummer>5598</ihk:berufenummer>
-                <ihk:pruefungszeitpunkt>F25</ihk:pruefungszeitpunkt>
-                <ihk:pruefungsbereich>Wiso</ihk:pruefungsbereich>
-                <ihk:erstellungseinrichtung>ZPA</ihk:erstellungseinrichtung>
-            </ihk:metadata>
-
-            <ihk:fragen>
-                <ihk:frage>
-                    <ihk:id>1</ihk:id>
-                    <ihk:titel>Was ist der Hauptzweck des Marketings?</ihk:titel>
-                    <ihk:interactiontypes>fill-in</ihk:interactiontypes>
-                </ihk:frage>
-            </ihk:fragen>
-
-            <!-- Level 2: Content -->
-            <ihkcontent:example>
-
-            </ihkcontent:example>
-        </ihk:pmdata>
-
-    </au>
-
-</courseStructure>
-
+```json
+{
+  "courseStructure": {
+    "course": {
+      "id": "https://example.pruefung.io/courses/zp/f25/5598/medienkaufleute-2025",
+      "title": {
+        "langstring": [
+          {
+            "lang": "de",
+            "value": "ZP F25 Medienkaufleute Digital und Print"
+          }
+        ]
+      },
+      "description": {
+        "langstring": [
+          {
+            "lang": "de",
+            "value": "IHK-Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print"
+          }
+        ]
+      }
+    },
+    "au": {
+      "id": "https://example.pruefung.io/au/zp/f25/5598/wiso/medienkaufleute-2025-wiso",
+      "moveOn": "Completed",
+      "masteryScore": 1,
+      "launchMethod": "AnyWindow",
+      "activityType": "examination",
+      "title": {
+        "langstring": [
+          {
+            "lang": "de",
+            "value": "ZP F25 Medienkaufleute Digital und Print Wiso"
+          }
+        ]
+      },
+      "description": {
+        "langstring": [
+          {
+            "lang": "de",
+            "value": "IHK Zwischenprüfung Frühjahr 2025 für Medienkaufleute Digital und Print. Prüfungsbereich Wiso"
+          }
+        ]
+      },
+      "url": "https://zp.pruefung.io",
+      "pmdata": {
+        "metadata": {
+          "berufsnummer": "5598",
+          "pruefungszeitpunkt": "F25",
+          "pruefungsbereich": "Wiso",
+          "erstellungseinrichtung": "ZPA"
+        },
+        "fragen": [
+          {
+            "id": "1",
+            "titel": "Was ist der Hauptzweck des Marketings?",
+            "interactiontypes": "fill-in"
+          }
+        ]
+      }
+    }
+  }
+}
 ```
 
-Diese XML-Struktur enthält:
+Diese JSON-Struktur enthält:
 
-- Eine Course-Definition mit Titel und Beschreibung
-- Eine AU (Assignable Unit) für "Medienkaufleute Digital und Print" mit:
-  - Berufekennnummer "82122" als zusätzliches Attribut
-  - Prüfungszeitpunkt "2025-06-05T09:00:00+02:00" als zusätzliches Attribut
-  - Verschiedene CMI5-konforme Attribute wie moveOn, masteryScore und launchMethod
-  - Titel, Beschreibung und Launch-URL
+**Course-Definition:**
+
+- Eindeutige ID für den Kurs
+- Titel und Beschreibung in mehreren Sprachen (hier Deutsch)
+
+**Assignable Unit (AU) für "Medienkaufleute Digital und Print":**
+
+- Eindeutige ID für die AU
+- CMI5-konforme Attribute:
+  - `moveOn`: "Completed" - Kriterium zum Fortschritt
+  - `masteryScore`: 1 - Erforderlicher Score für Bestehen
+  - `launchMethod`: "AnyWindow" - Startmethode
+  - `activityType`: "examination" - Aktivitätstyp
+- Launch-URL für die Prüfungsumgebung
+- IHK-spezifische Prüfungsmetadaten (Level 1):
+  - Berufsnummer "5598"
+  - Prüfungszeitpunkt "F25" (Frühjahr 2025)
+  - Prüfungsbereich "Wiso"
+  - Erstellungseinrichtung "ZPA"
+- Prüfungsfragen mit ID, Titel und Interaktionstyp
+
+Die JSON-basierte Struktur bietet gegenüber XML folgende Vorteile:
+
+- Einfachere Verarbeitung und Parsing
+- Bessere Unterstützung durch moderne Web-Frameworks
+- Kompaktere Datenübertragung
+- Native Unterstützung in JavaScript und anderen modernen Programmiersprachen
+- Umfangreiche Validierungsmöglichkeiten durch JSON Schema

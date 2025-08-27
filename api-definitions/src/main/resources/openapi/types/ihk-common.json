@@ -1,0 +1,63 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "IHK Common Types",
+        "description": "Common type definitions for IHK examination formats",
+        "version": "1.0.0"
+    },
+    "components": {
+        "schemas": {
+            "TagsType": {
+                "type": "object",
+                "description": "A collection of tags for categorization or identification of content in IHK Level 1 examination format",
+                "properties": {
+                    "tag": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TagType"
+                        },
+                        "description": "Array of tag elements"
+                    }
+                }
+            },
+            "TagType": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "wert",
+                    "tagtyp"
+                ],
+                "description": "A single tag for categorization or identification of content. Each tag has a name, value and type.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the tag"
+                    },
+                    "wert": {
+                        "type": "string",
+                        "description": "Value of the tag"
+                    },
+                    "tagtyp": {
+                        "type": "string",
+                        "description": "Type of the tag, e.g. 'unbewertet'"
+                    }
+                }
+            },
+            "InteractionType": {
+                "type": "string",
+                "enum": [
+                    "true-false",
+                    "choice",
+                    "fill-in",
+                    "matching",
+                    "performance",
+                    "sequencing",
+                    "likert",
+                    "numeric",
+                    "other"
+                ],
+                "description": "Interaction types based on SCORM 2004 4th edition and xAPI SCORM profile"
+            }
+        }
+    }
+}
