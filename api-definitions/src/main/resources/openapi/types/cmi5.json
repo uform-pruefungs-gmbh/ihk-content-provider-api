@@ -1,0 +1,304 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "CMI5 Type Definitions",
+        "version": "1.0.0",
+        "description": "OpenAPI type definitions converted from cmi5.xsd schema"
+    },
+    "components": {
+        "schemas": {
+            "CourseStructureType": {
+                "type": "object",
+                "description": "Root type for CMI5 course structure definition",
+                "required": [
+                    "course"
+                ],
+                "properties": {
+                    "course": {
+                        "$ref": "#/components/schemas/CourseType"
+                    }
+                },
+                "additionalProperties": true
+            },
+            "CourseType": {
+                "type": "object",
+                "description": "Course definition with activities and metadata",
+                "required": [
+                    "id",
+                    "title",
+                    "description"
+                ],
+                "properties": {
+                    "title": {
+                        "$ref": "#/components/schemas/TextType",
+                        "description": "Course title in multiple languages"
+                    },
+                    "description": {
+                        "$ref": "#/components/schemas/TextType",
+                        "description": "Course description in multiple languages"
+                    },
+                    "objectives": {
+                        "$ref": "#/components/schemas/ObjectivesType",
+                        "description": "Learning objectives for the course"
+                    },
+                    "au": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AuType"
+                        },
+                        "description": "Assignable Units (AUs) within the course"
+                    },
+                    "block": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BlockType"
+                        },
+                        "description": "Blocks grouping multiple AUs"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "Unique identifier for the course"
+                    },
+                    "languages": {
+                        "$ref": "#/components/schemas/LanguagesType",
+                        "description": "Supported languages for the course"
+                    }
+                },
+                "additionalProperties": true
+            },
+            "AuType": {
+                "type": "object",
+                "description": "Assignable Unit - smallest trackable learning unit",
+                "required": [
+                    "id",
+                    "title",
+                    "description",
+                    "url"
+                ],
+                "properties": {
+                    "title": {
+                        "$ref": "#/components/schemas/TextType",
+                        "description": "AU title in multiple languages"
+                    },
+                    "description": {
+                        "$ref": "#/components/schemas/TextType",
+                        "description": "AU description in multiple languages"
+                    },
+                    "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "Launch URL for the AU"
+                    },
+                    "objectives": {
+                        "$ref": "#/components/schemas/ReferencesObjectivesType",
+                        "description": "References to course objectives this AU addresses"
+                    },
+                    "launchParameters": {
+                        "type": "string",
+                        "description": "Optional launch parameters for the AU"
+                    },
+                    "entitlementKey": {
+                        "type": "string",
+                        "description": "Optional entitlement key for AU access"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "Unique identifier for the AU"
+                    },
+                    "moveOn": {
+                        "type": "string",
+                        "enum": [
+                            "NotApplicable",
+                            "Passed",
+                            "Completed",
+                            "CompletedAndPassed",
+                            "CompletedOrPassed"
+                        ],
+                        "default": "NotApplicable",
+                        "description": "Criteria for moving to the next AU"
+                    },
+                    "masteryScore": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "description": "Score required for mastery (0.0 to 1.0)"
+                    },
+                    "launchMethod": {
+                        "type": "string",
+                        "enum": [
+                            "AnyWindow",
+                            "OwnWindow"
+                        ],
+                        "default": "AnyWindow",
+                        "description": "Method for launching the AU"
+                    },
+                    "activityType": {
+                        "type": "string",
+                        "description": "Type of activity (optional)"
+                    }
+                },
+                "additionalProperties": true
+            },
+            "BlockType": {
+                "type": "object",
+                "description": "Block grouping multiple assignable units",
+                "required": [
+                    "id",
+                    "title",
+                    "description"
+                ],
+                "properties": {
+                    "title": {
+                        "$ref": "#/components/schemas/TextType",
+                        "description": "Block title in multiple languages"
+                    },
+                    "description": {
+                        "$ref": "#/components/schemas/TextType",
+                        "description": "Block description in multiple languages"
+                    },
+                    "objectives": {
+                        "$ref": "#/components/schemas/ObjectivesType",
+                        "description": "Learning objectives for the block"
+                    },
+                    "au": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AuType"
+                        },
+                        "description": "Assignable Units within this block"
+                    },
+                    "block": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BlockType"
+                        },
+                        "description": "Nested blocks within this block"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "Unique identifier for the block"
+                    }
+                },
+                "additionalProperties": true
+            },
+            "ObjectivesType": {
+                "type": "object",
+                "description": "Collection of learning objectives",
+                "required": [
+                    "objective"
+                ],
+                "properties": {
+                    "objective": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "title",
+                                "description"
+                            ],
+                            "properties": {
+                                "title": {
+                                    "$ref": "#/components/schemas/TextType",
+                                    "description": "Objective title in multiple languages"
+                                },
+                                "description": {
+                                    "$ref": "#/components/schemas/TextType",
+                                    "description": "Objective description in multiple languages"
+                                },
+                                "id": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "description": "Unique identifier for the objective"
+                                }
+                            },
+                            "additionalProperties": true
+                        }
+                    }
+                },
+                "additionalProperties": true
+            },
+            "ReferencesObjectivesType": {
+                "type": "object",
+                "description": "References to learning objectives",
+                "required": [
+                    "objective"
+                ],
+                "properties": {
+                    "objective": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "idref"
+                            ],
+                            "properties": {
+                                "idref": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "description": "Reference to an objective ID"
+                                }
+                            },
+                            "additionalProperties": true
+                        }
+                    }
+                },
+                "additionalProperties": true
+            },
+            "TextType": {
+                "type": "object",
+                "description": "Internationalized text with language variants",
+                "required": [
+                    "langstring"
+                ],
+                "properties": {
+                    "langstring": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "value"
+                            ],
+                            "properties": {
+                                "value": {
+                                    "type": "string",
+                                    "description": "Text content"
+                                },
+                                "lang": {
+                                    "type": "string",
+                                    "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+                                    "description": "Language code (e.g., 'en', 'de', 'en-US')",
+                                    "example": "de"
+                                }
+                            },
+                            "additionalProperties": true
+                        }
+                    }
+                },
+                "additionalProperties": true
+            },
+            "LanguagesType": {
+                "type": "object",
+                "description": "List of supported languages",
+                "properties": {
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+                            "description": "Language code"
+                        },
+                        "description": "Array of supported language codes"
+                    }
+                },
+                "additionalProperties": true
+            }
+        }
+    }
+}

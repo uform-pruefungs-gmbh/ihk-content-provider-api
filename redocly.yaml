@@ -3,16 +3,64 @@ apis:
     root: api-definitions/src/main/resources/openapi/ihk-content-provider-spi.yaml
   api:
     root: api-definitions/src/main/resources/openapi/ihk-content-provider-api.yaml
+  participants:
+    root: api-definitions/src/main/resources/openapi/ihk-participants-api.yaml
+  executionrecords:
+    root: api-definitions/src/main/resources/openapi/ihk-executionrecord-api.yaml
+  types-common:
+    root: api-definitions/src/main/resources/openapi/types/ihk-common.json
+  types-level1:
+    root: api-definitions/src/main/resources/openapi/types/ihk-level1.json
+  types-cmi5:
+    root: api-definitions/src/main/resources/openapi/types/cmi5.json
+  types-level2:
+    root: api-definitions/src/main/resources/openapi/types/ihk-level2-example.json
 extends:
   - recommended
 rules:
   tag-description: off
   operation-summary: error
   no-unresolved-refs: error
-  no-unused-components: info
   operation-2xx-response: error
   operation-operationId: error
   operation-singular-tag: error
   no-enum-type-mismatch: error
   no-identical-paths: error
   no-ambiguous-paths: error
+  # Special rules for type definition files
+  struct:
+    severity: off
+    subject:
+      type: Api
+      filterInAPI:
+        - types-common
+        - types-level1
+        - types-cmi5
+        - types-level2
+  no-empty-servers:
+    severity: off
+    subject:
+      type: Api
+      filterInAPI:
+        - types-common
+        - types-level1
+        - types-cmi5
+        - types-level2
+  info-license:
+    severity: off
+    subject:
+      type: Api
+      filterInAPI:
+        - types-common
+        - types-level1
+        - types-cmi5
+        - types-level2
+  no-unused-components:
+    severity: off
+    subject:
+      type: Api
+      filterInAPI:
+        - types-common
+        - types-level1
+        - types-cmi5
+        - types-level2

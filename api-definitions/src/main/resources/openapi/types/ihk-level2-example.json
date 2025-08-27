@@ -1,0 +1,36 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "IHK Level 2 Example Type Definitions",
+        "version": "1.0.0",
+        "description": "OpenAPI type definitions converted from ihk-level2-example.xsd schema"
+    },
+    "components": {
+        "schemas": {
+            "ExampleType": {
+                "type": "object",
+                "description": "Generic example type that can contain any simple value",
+                "properties": {
+                    "example": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "boolean"
+                            }
+                        ],
+                        "description": "Example value of any simple type"
+                    }
+                },
+                "additionalProperties": true
+            }
+        }
+    }
+}

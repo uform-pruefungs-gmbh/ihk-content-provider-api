@@ -1,0 +1,155 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "IHK Level 1 Types",
+        "description": "Type definitions for IHK Level 1 examination format",
+        "version": "1.0.0"
+    },
+    "components": {
+        "schemas": {
+            "PruefungsmanagerdataType": {
+                "type": "object",
+                "required": [
+                    "metadata",
+                    "fragen"
+                ],
+                "description": "Data structure for the examination manager in IHK Level 1 examination format",
+                "properties": {
+                    "metadata": {
+                        "$ref": "#/components/schemas/MetadataType"
+                    },
+                    "fragen": {
+                        "$ref": "#/components/schemas/QuestionListType"
+                    },
+                    "tags": {
+                        "description": "Tags for categorization or identification of content",
+                        "type": "object",
+                        "properties": {
+                            "tag": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "wert": {
+                                            "type": "string"
+                                        },
+                                        "tagtyp": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "MetadataType": {
+                "type": "object",
+                "required": [
+                    "berufenummer",
+                    "pruefungszeitpunkt",
+                    "pruefungsbereich"
+                ],
+                "description": "Metadata for IHK Level 1 examination format",
+                "properties": {
+                    "berufenummer": {
+                        "type": "string",
+                        "description": "Professional number"
+                    },
+                    "pruefungszeitpunkt": {
+                        "type": "string",
+                        "pattern": "^[FSHW][0-9][0-9]$",
+                        "description": "Examination period (e.g. F23 for Spring 2023)"
+                    },
+                    "pruefungsbereich": {
+                        "type": "string",
+                        "description": "Examination area"
+                    },
+                    "erstellungseinrichtung": {
+                        "type": "string",
+                        "description": "Creating institution (optional)"
+                    }
+                }
+            },
+            "QuestionListType": {
+                "type": "object",
+                "required": [
+                    "frage"
+                ],
+                "description": "List of questions in IHK Level 1 examination format",
+                "properties": {
+                    "frage": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/QuestionType"
+                        },
+                        "description": "Array of question elements"
+                    }
+                }
+            },
+            "QuestionType": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "titel",
+                    "interactiontypes"
+                ],
+                "description": "A question in IHK Level 1 examination format. Each question has an ID, title and can have multiple interaction types",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique ID of the question"
+                    },
+                    "titel": {
+                        "type": "string",
+                        "description": "Title of the question"
+                    },
+                    "interactiontypes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "true-false",
+                                "choice",
+                                "fill-in",
+                                "matching",
+                                "performance",
+                                "sequencing",
+                                "likert",
+                                "numeric",
+                                "other"
+                            ]
+                        },
+                        "description": "Types of interactions for this question"
+                    },
+                    "tags": {
+                        "description": "Tags for this question",
+                        "type": "object",
+                        "properties": {
+                            "tag": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "wert": {
+                                            "type": "string"
+                                        },
+                                        "tagtyp": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
