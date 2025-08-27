@@ -45,29 +45,14 @@ jobs:
         run: |
           sudo cp ${{ github.workspace }}/README.md ${{ github.workspace }}/docs/README.md
 
-      - name: build xsd directory and copy xsds to docs
+      - name: Copy JSON type definitions to docs
         shell: bash
         run: |
-          sudo mkdir -p ${{ github.workspace }}/docs/xsd
-          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-common.xsd ${{ github.workspace }}/docs/xsd/ihk-common.xsd
-          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level1.xsd ${{ github.workspace }}/docs/xsd/ihk-level1.xsd
-          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level2-example.xsd ${{ github.workspace }}/docs/xsd/ihk-level2-example.xsd
-
-      - name: Build Schema viewer for ihk-level1.xsd
-        shell: bash
-        run: |
-          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/xsdviewer/schemaviewer.html ${{ github.workspace }}/docs/sv.html
-          ESCAPED_XSD=$(cat ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level1.xsd | sed 's:\/:\\\/:g' | sed 's:\":\\\":g')
-          sudo awk -v xsd="$ESCAPED_XSD" '{gsub(/ThIs-Is-ASampleSchema/, xsd); print}' ${{ github.workspace }}/docs/sv.html > temp && sudo mv temp ${{ github.workspace }}/docs/schemaviewer-level1.html
-          sudo rm ${{ github.workspace }}/docs/sv.html
-
-      - name: Build Schema viewer for ihk-level2.xsd
-        shell: bash
-        run: |
-          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/xsdviewer/schemaviewer.html ${{ github.workspace }}/docs/sv.html
-          ESCAPED_XSD=$(cat ${{ github.workspace }}/api-definitions/src/main/resources/xsd/ihk-level2-example.xsd)
-          sudo awk -v xsd="$ESCAPED_XSD" '{gsub(/ThIs-Is-ASampleSchema/, xsd); print}' ${{ github.workspace }}/docs/sv.html > temp && sudo mv temp ${{ github.workspace }}/docs/schemaviewer-level2-example.html
-          sudo rm ${{ github.workspace }}/docs/sv.html
+          sudo mkdir -p ${{ github.workspace }}/docs/types
+          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/types/ihk-common.json ${{ github.workspace }}/docs/types/ihk-common.json
+          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/types/ihk-level1.json ${{ github.workspace }}/docs/types/ihk-level1.json
+          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/types/cmi5.json ${{ github.workspace }}/docs/types/cmi5.json
+          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/types/ihk-level2-example.json ${{ github.workspace }}/docs/types/ihk-level2-example.json
 
       - name: Generate SPI- and API-Docs into docs dir
         shell: bash

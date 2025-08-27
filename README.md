@@ -57,10 +57,6 @@ Die technischen Definitionen beschreiben die Schnittstellen im OpenAPI-Format V3
 
 [Technische Definition der Content Provider SPI](spi.html)
 
-[Technische Definition der Participants API](participants-api.html)
-
-[Technische Definition der Execution Records API](executionrecord-api.html)
-
 ### JSON Schema-Definitionen für Prüfungsdatenstrukturen
 
 Die JSON Schema-Definitionen beschreiben die Datenstrukturen für die verschiedenen Level des Datenaustauschmodells:
