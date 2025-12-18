@@ -9,6 +9,13 @@
             "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
         }
     },
+    "servers": [
+        {
+            "url": "https://api.pruefung.io/example",
+            "description": "Dummy Example server"
+        }
+    ],
+    "paths": {},
     "components": {
         "schemas": {
             "ExampleType": {
