@@ -49,7 +49,7 @@ Die Definitionen sind in JSON Schema und OpenAPI 3.0.x-Format verfügbar.
 
 ## Technische Schnittstellendefinitionen
 
-### Beschreibung der APIs
+### Beschreibung der API
 
 Die technischen Definitionen beschreiben die Schnittstellen im OpenAPI-Format V3
 

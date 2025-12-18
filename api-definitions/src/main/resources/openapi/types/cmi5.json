@@ -3,8 +3,19 @@
     "info": {
         "title": "CMI5 Type Definitions",
         "version": "1.0.0",
-        "description": "OpenAPI type definitions converted from cmi5.xsd schema"
+        "description": "OpenAPI type definitions converted from cmi5.xsd schema",
+        "license": {
+            "name": "Creative Commons Zero v1.0 Universal",
+            "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+        }
     },
+    "servers": [
+        {
+            "url": "https://placeholder.invalid",
+            "description": "Placeholder server entry for schema-only definitions"
+        }
+    ],
+    "paths": {},
     "components": {
         "schemas": {
             "CourseStructureType": {
