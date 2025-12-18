@@ -3,7 +3,11 @@
     "info": {
         "title": "IHK Level 2 Example Type Definitions",
         "version": "1.0.0",
-        "description": "OpenAPI type definitions converted from ihk-level2-example.xsd schema"
+        "description": "OpenAPI type definitions converted from ihk-level2-example.xsd schema",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        }
     },
     "components": {
         "schemas": {

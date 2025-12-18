@@ -3,8 +3,19 @@
     "info": {
         "title": "IHK Common Types",
         "description": "Common type definitions for IHK examination formats",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        }
     },
+    "servers": [
+        {
+            "url": "https://api.ihk.pruefung.io",
+            "description": "Dummy reference server for common type definitions"
+        }
+    ],
+    "paths": {},
     "components": {
         "schemas": {
             "TagsType": {
@@ -40,6 +51,10 @@
                     "tagtyp": {
                         "type": "string",
                         "description": "Type of the tag, e.g. 'unbewertet'"
+                    },
+                    "interactionType": {
+                        "$ref": "#/components/schemas/InteractionType",
+                        "description": "Interaction type associated with the tag"
                     }
                 }
             },
