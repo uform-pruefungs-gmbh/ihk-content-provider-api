@@ -53,8 +53,8 @@ jobs:
           sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/types/ihk-level1.json ${{ github.workspace }}/docs/types/ihk-level1.json
           sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/types/cmi5.json ${{ github.workspace }}/docs/types/cmi5.json
           sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/types/ihk-level2-example.json ${{ github.workspace }}/docs/types/ihk-level2-example.json
-          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/ihk-content-provider-api.yaml ${{ github.workspace }}/docs/types/ihk-content-provider-api.yaml
-          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/ihk-content-provider-spi.yaml ${{ github.workspace }}/docs/types/ihk-content-provider-spi.yaml
+          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/ihk-content-provider-api.yaml ${{ github.workspace }}/docs/ihk-content-provider-api.yaml
+          sudo cp ${{ github.workspace }}/api-definitions/src/main/resources/openapi/ihk-content-provider-spi.yaml ${{ github.workspace }}/docs/ihk-content-provider-spi.yaml
 
       - name: Generate SPI- and API-Docs into docs dir
         shell: bash
