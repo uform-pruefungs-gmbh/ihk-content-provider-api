@@ -68,6 +68,11 @@ Die JSON Schema-Definitionen beschreiben die Datenstrukturen für die verschiede
 - [IHK Level 1 Types](./types/ihk-level1.json) - Strukturen für Prüfungsfragen und Metadaten
 - [IHK Level 2 Types](./types/ihk-level2-example.json) - Erweiterte Beispieltypen
 
+**OpenAPI-Spezifikationen:**
+
+- [IHK Content Provider API](./ihk-content-provider-api.yaml) - OpenAPI-Spezifikation der Content Provider API
+- [IHK Content Provider SPI](./ihk-content-provider-spi.yaml) - OpenAPI-Spezifikation der Content Provider SPI
+
 ## JSON-Beispielstruktur für CMI5-konforme Prüfungsinhalte
 
 Nachfolgend ein Beispiel für eine CMI5-konforme JSON-Struktur mit einer Assignable Unit (AU) für "Medienkaufleute Digital und Print":

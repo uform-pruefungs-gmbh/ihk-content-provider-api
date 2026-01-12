@@ -94,12 +94,19 @@ components:
           type: string
           example: "Zwischenprüfung Herbst 2026 - Fachinformatiker Anwendungsentwicklung"
           description: Name of the participation
+        content_id:
+          type: string
+          example: "123456789012345678"
+          description: Identifier for the examination content.
+        subject_id:
+          type: string
+          example: "876543210987654321"
+          description: Identifier for the subject or user associated with the participation.
 
     Participant:
       type: object
       required:
         - subject_id
-        - participation_id
       properties:
         subject_id:
           type: string
@@ -230,7 +237,7 @@ components:
 
     MonitoringEvent:
       type: object
-      required: [event, content_id, otp_id]
+      required: [event, otp_id]
       properties:
         event:
           type: string
@@ -404,7 +411,7 @@ paths:
               items:
                 type: string
                 description: List of otp_id for which to retrieve the status
-                example: ["123456789012345678", "234567890123456789"]
+                example: "123456789012345678"
       responses:
         "200":
           description: Status retrieved successfully
@@ -433,13 +440,23 @@ paths:
         - HandleState
       summary: Handle locks and suspensions of examinations
       description:
-        "lock or unlock a list of examinations to prohibit the usage by the participants.
+        "Lock or unlock a list of examinations to prohibit the usage by the participants.
 
-        if the OtpState of the examination isn't started yet, the OtpState will be set to **runnable**,
-        if lock_state is 'unlock' or **created** if lock_state is 'lock'.
+        The state transitions follow this table:
 
-        if the OtpState of the examination is already started, the OtpState will be set to **suspended**
-        if lock_state is 'lock' or **running** if lock_state is 'unlock'."
+        | Current State | Lock State | New State  |
+        |---------------|------------|----------|
+        | created       | lock       | created  |
+        | created       | unlock     | runnable |
+        | runnable      | lock       | runnable |
+        | runnable      | unlock     | running* |
+        | running       | lock       | suspended|
+        | running       | unlock     | running  |
+        | suspended     | lock       | suspended|
+        | suspended     | unlock     | running  |
+
+        * Note: Unlocking from 'runnable' to 'running' is not triggered by the management system,
+        but by the participant when they start the examination. It will be transmitted by the spi via the monitoring endpoint."
       operationId: handleLocksExaminations
       parameters:
         - name: lock_state
@@ -457,7 +474,7 @@ paths:
               items:
                 type: string
                 description: List of otp_id for which should be locked or unlocked
-                example: ["123456789012345678", "234567890123456789"]
+                example: "123456789012345678"
       responses:
         "200":
           description: Status updated successfully
@@ -545,7 +562,7 @@ paths:
             schema:
               type: object
               required:
-                - content_id
+                - subscription_id
               properties:
                 subscription_id:
                   type: string
