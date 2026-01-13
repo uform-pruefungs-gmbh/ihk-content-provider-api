@@ -547,28 +547,24 @@ paths:
 
     # Monitoring during execution
   /monitoring/sse:
-    post:
+    get:
       tags:
         - ServerSentEvents
       summary: Subscribe for monitoring
       description:
         Subscribe for monitoring events. These events are sent as Server-Sent Events (SSE) stream.
         The client will receive a continuous stream of events related to the examination status.
-        The client must provide a valid subscription_id to receive the events.
+        The client must provide a valid subscription_id as a query parameter to receive the events.
       operationId: subscribeForMonitoring
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - subscription_id
-              properties:
-                subscription_id:
-                  type: string
-                  format: uuid
-                  description: Unique identifier for the subscription
-                  example: "123e4567-e89b-12d3-a456-426614174002"
+      parameters:
+        - name: subscription_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier for the subscription
+          example: "123e4567-e89b-12d3-a456-426614174002"
       responses:
         "200":
           description: Monitoring successfully registered
